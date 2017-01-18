@@ -1,5 +1,11 @@
 # History
 
+NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
+
+## Version 1.5.0
+
+* Browser compatibility.
+
 ## Version 1.4.0
 
 * Introduced the `autowrap` validator on `Array` types.
