@@ -2,6 +2,10 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 1.5.1
+
+* Allow any type to be specified as a custom error (useful for localization).
+
 ## Version 1.5.0
 
 * Browser compatibility.

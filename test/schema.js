@@ -198,6 +198,20 @@ describe('schema', function() {
 			expect(s.errors).to.have.property('type').equal('Boolean.');
 			expect(s.errors).to.have.property('required').equal('Required.');
 		});
+		testSyncAndAsync ('should come back with any type set on the errors key.', {
+			type: [Boolean, {
+				'en': 'Boolean.'
+			}],
+			required: [true, {
+				'en': 'Required.'
+			}]
+		}, function(s) {
+			expect(s).to.have.property('type').equal(Boolean);
+			expect(s).to.have.property('required').equal(true);
+			expect(s).to.have.property('errors').be.an('object');
+			expect(s.errors).to.have.property('type').to.have.property('en').equal('Boolean.');
+			expect(s.errors).to.have.property('required').to.have.property('en').equal('Required.');
+		});
 		describe('allowUnknownKeys [deprecated]', function() {
 			testSyncAndAsync ('should come back with unknownKeys set to \'allow\' if allowUnknownKeys is \'true\'.', {
 				type: Object,
