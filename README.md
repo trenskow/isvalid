@@ -278,7 +278,7 @@ In the above example input must be of type `String`, it is required, but `null` 
 
 > *Remark:* By default `null` is *not* allowed.
 
-#### `equals`
+#### `equal`
 Type: Any
 
 This validator allows for a static value. If this is provided the data must match the value of this validator.
