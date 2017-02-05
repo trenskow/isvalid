@@ -26,6 +26,7 @@
 	 * [`required`](#required)
 		 * [Implicitly Required](#implicitly-required)
 	 * [`allowNull`](#allownull)
+	 * [`equals`](#equals)
 	 * [`errors`](#errors)
 	 * [Type Specific Validators](#type-specific-validators)
 	 * [Validators Common to `Object` and `Array`](#validators-common-to-object-and-array)
@@ -166,7 +167,7 @@ or if `type` is your only validator, you can also do this:
 
 In the above example the input must be of type `String`.
 
-All schemas must have the `type` specified and/or have a custom validator through a `custom` function - more about [custom validators](#custom) in it's designated section below.
+All schemas must have at least a `type`, `custom` or `equal` validator - or a combination of any of them.
 
 ### Validators Available to All Types
 
@@ -276,6 +277,13 @@ This validator allows for `null`-values to pass through - even if the input is r
 In the above example input must be of type `String`, it is required, but `null` is allowed.
 
 > *Remark:* By default `null` is *not* allowed.
+
+#### `equals`
+Type: Any
+
+This validator allows for a static value. If this is provided the data must match the value of this validator.
+
+This works with any type (also `Object` and `Array`) and a deep comparison is performed.
 
 #### `errors`
 
