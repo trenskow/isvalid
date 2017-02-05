@@ -212,6 +212,11 @@ describe('schema', function() {
 			expect(s.errors).to.have.property('type').to.have.property('en').equal('Boolean.');
 			expect(s.errors).to.have.property('required').to.have.property('en').equal('Required.');
 		});
+		testSyncAndAsync ('should come back with equal formalized.', {
+			equal: '123'
+		}, function(s) {
+			expect(s).to.have.property('equal').equal('123');
+		});
 		describe('allowUnknownKeys [deprecated]', function() {
 			testSyncAndAsync ('should come back with unknownKeys set to \'allow\' if allowUnknownKeys is \'true\'.', {
 				type: Object,
