@@ -335,10 +335,8 @@ describe('validate', function() {
 			isvalid({}, undefined, undefined);
 		}).to.throw(Error);
 	});
-	it ('should throw an error if callback is not provided.', function() {
-		expect(function() {
-			isvalid({}, {}, undefined);
-		}).to.throw(Error);
+	it ('should return a promise if no callback is provided', function() {
+		expect(isvalid({}, {})).to.be.instanceof(Promise);
 	});
 	describe('type conversion', function() {
 		it ('should convert string values into numbers if string contains a number.', function(done) {
