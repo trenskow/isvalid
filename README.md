@@ -437,7 +437,7 @@ Example:
 > The `unique` validator does a deep comparison on objects and arrays.
 
 ##### `autowrap`
-Type: `Boolean` or `String` of value `transparent`.
+Type: `Boolean`
 
 If the provided data is not an array - but it matches the subschema - this will wrap the data in an array before actual validation.
 
@@ -449,7 +449,7 @@ Example:
 		schema: { … }
 	}
 
-If `autowrap` is set to `true` and autowrap fails (the subschema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error. If, though, `autowrap` is set to `transparent` it will emit eventual errors as the failing subschema validation. This can be useful if you want to hide the fact, that the data can be wrapped in an array.
+If `autowrap` is set to `true` and autowrap fails (the subschema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error.
 
 > Default is `false`.
 
