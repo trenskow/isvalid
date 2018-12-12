@@ -17,7 +17,7 @@ app.param('testParam', validate.param({
 app.param('cbTestParam', validate.param({
 	type: String, 
 	required: true,
-	custom: (data, schema, options) => {
+	post: (data, schema, options) => {
 		options.res.sendStatus(201);
 	}
 }));

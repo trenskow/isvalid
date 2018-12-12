@@ -134,11 +134,11 @@ describe('schema', function() {
 		it('should come back with no error and match set if match is RegExp.', () => {
 			return expect(formalize({ type: String, match: /test/ })).to.eventually.have.property('match');
 		});
-		it('should come back with custom wrapped in an array.', () => {
-			return expect(formalize({ custom: function() {} })).to.eventually.have.property('custom').to.be.an('array');
+		it('should come back with post wrapped in an array.', () => {
+			return expect(formalize({ post: function() {} })).to.eventually.have.property('post').to.be.an('array');
 		});
-		it('should come back with custom as an array.', () => {
-			return expect(formalize({ custom: [ function() {} ] })).to.eventually.have.property('custom').to.be.an('array');
+		it('should come back with post as an array.', () => {
+			return expect(formalize({ post: [ function() {} ] })).to.eventually.have.property('post').to.be.an('array');
 		});
 		it('should come back with errors set on the errors key.', () => {
 			let s = formalize({

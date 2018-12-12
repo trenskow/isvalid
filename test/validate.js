@@ -21,13 +21,13 @@ const commonTests = {
 				})).to.eventually.be.a(type.name);
 			});
 			describe('#errors', function() {
-				it(`should come back with an error of custom message if input is not a(n) ${type.name}.`, () => {
+				it(`should come back with an error of post message if input is not a(n) ${type.name}.`, () => {
 					return expect(isvalid(invalidData, {
 						type: type,
 						errors: {
-							type: 'Type custom error message.'
+							type: 'Type post error message.'
 						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Type custom error message.');
+					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Type post error message.');
 				});
 			});
 		});
@@ -47,14 +47,14 @@ const commonTests = {
 				})).to.eventually.be.a(type.name);
 			});
 			describe('#errors', function() {
-				it('should come back with an error with custom message if required and input is undefined.', () => {
+				it('should come back with an error with post message if required and input is undefined.', () => {
 					return expect(isvalid(undefined, {
 						type: type,
 						required: true,
 						errors: {
-							required: 'Required custom error message.'
+							required: 'Required post error message.'
 						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Required custom error message.');
+					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Required post error message.');
 				});
 			});
 		});
@@ -75,14 +75,14 @@ const commonTests = {
 				})).to.eventually.be.null;
 			});
 			describe('#errors', function() {
-				it('should come back with an error with custom message if required and does not allow null and input is null.', () => {
+				it('should come back with an error with post message if required and does not allow null and input is null.', () => {
 					expect(isvalid(null, {
 						type: type,
 						required: true,
 						errors: {
-							allowNull: 'Allow null custom error message.'
+							allowNull: 'Allow null post error message.'
 						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Allow null custom error message.');
+					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Allow null post error message.');
 				});
 			});
 		});
@@ -118,52 +118,52 @@ const commonTests = {
 			});
 		});
 	},
-	custom: function() {
-		describe('custom', function() {
-			it('should call function if custom is specified.', () => {
+	post: function() {
+		describe('post', function() {
+			it('should call function if post is specified.', () => {
 				return expect(isvalid('test', {
-					custom: function(data) {
+					post: function(data) {
 						expect(data).to.be.a('String').equals('test');
 						return 'test2';
 					}
 				})).to.eventually.be.a('String').equals('test2');
 			});
-			it('should call function if synchronous custom is specified.', () => {
+			it('should call function if synchronous post is specified.', () => {
 				return expect(isvalid(undefined, {
-					custom: function() {
+					post: function() {
 						return 'test';
 					}
 				})).to.eventually.be.a('String').equal('test');
 			});
-			it('should convert errors thrown in synchronous custom function.', () => {
+			it('should convert errors thrown in synchronous post function.', () => {
 				return expect(isvalid('test', {
-					custom: function() {
+					post: function() {
 						throw new Error('an error');
 					}
 				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'an error');
 			});
 			it('should return original object if synchronous function doesn\'t return.', () => {
 				return expect(isvalid('test', {
-					custom: function() {}
+					post: function() {}
 				})).to.eventually.be.a('String').equal('test');
 			});
-			it('should reformat err if custom is specified and returns an error.', () => {
+			it('should reformat err if post is specified and returns an error.', () => {
 				return expect(isvalid({}, {
-					custom: function(obj, schema, fn) {
+					post: function(obj, schema, fn) {
 						fn(new Error('This is an error'));
 					}
-				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('validator', 'custom');
+				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('validator', 'post');
 			});
-			it('should pass on custom schema options if specified.', () => {
+			it('should pass on post schema options if specified.', () => {
 				return expect(isvalid({}, {
-					custom: function(obj, schema, options) {
+					post: function(obj, schema, options) {
 						expect(options).to.have.property('test').to.be.equal(true);
 					}
 				}, {
 					test: true
 				})).to.not.be.rejected;
 			});
-			it('should first validate using validators and then custom.', () => {
+			it('should first validate using validators and then post.', () => {
 				let s = isvalid({
 					'low': 0
 				}, {
@@ -172,7 +172,7 @@ const commonTests = {
 						'low': { type: Number },
 						'high': { type: Number, default: 10 },
 					},
-					custom: function(obj) {
+					post: function(obj) {
 						expect(obj.high).to.equal(10);
 					}
 				});
@@ -181,9 +181,9 @@ const commonTests = {
 					expect(s).to.eventually.have.property('high').equal(10)
 				]);
 			});
-			it('should call all custom validators in array.', () => {
+			it('should call all post validators in array.', () => {
 				return expect(isvalid(0, {
-					custom: [
+					post: [
 						function(data) {
 							return data + 1;
 						},
@@ -201,7 +201,7 @@ const commonTests = {
 			});
 			it('should come back with error if thrown underway.', () => {
 				return expect(isvalid(0, {
-					custom: [
+					post: [
 						function(data) {
 							return data + 1;
 						},
@@ -209,16 +209,16 @@ const commonTests = {
 							throw new Error('Stop here');
 						},
 						function(data) {
-							assert(false, 'This custom function should not have been called.');
+							assert(false, 'This post function should not have been called.');
 							return data + 3;
 						}
 					]
-				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'custom');
+				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'post');
 			});
 		});
 	},
 	all: function(type, validData, invalidData) { var self = this;
-		['type', 'required', 'allowNull', 'default', 'equal', 'custom'].forEach(function(test) {
+		['type', 'required', 'allowNull', 'default', 'equal', 'post'].forEach(function(test) {
 			self[test](type, validData, invalidData);
 		});
 	}
@@ -341,7 +341,7 @@ describe('validate', function() {
 				})).to.eventually.not.have.property('why');
 			});
 			describe('#errors', function() {
-				it('should come back with error of custom message if there are unknown keys and unknownKeys is set to \'deny\'.', () => {
+				it('should come back with error of post message if there are unknown keys and unknownKeys is set to \'deny\'.', () => {
 					return expect(isvalid({
 						awesome: true,
 						why: 'it just is!'
@@ -394,7 +394,7 @@ describe('validate', function() {
 				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'len');
 			});
 			describe('#errors', function() {
-				it('should come back with error of custom message if array length is not within ranges of len.', () => {
+				it('should come back with error of post message if array length is not within ranges of len.', () => {
 					return expect(isvalid([], {
 						type: Array,
 						len: '2-',
@@ -426,7 +426,7 @@ describe('validate', function() {
 				})).to.eventually.have.length(4);
 			});
 			describe('#errors', function() {
-				it('should come back with error of custom message if array of objects is not unique.', () => {
+				it('should come back with error of post message if array of objects is not unique.', () => {
 					return expect(isvalid([{
 						awesome: true
 					},{
@@ -504,7 +504,7 @@ describe('validate', function() {
 					.to.eventually.equal('123');
 			});
 			describe('#errors', function() {
-				it('should come back with an error of custom message if string does not match RegExp.', () => {
+				it('should come back with an error of post message if string does not match RegExp.', () => {
 					return expect(isvalid('123', {
 						type: String,
 						match: /^[a-z]+$/,
@@ -526,7 +526,7 @@ describe('validate', function() {
 					.to.eventually.be.a('String').equal('test');
 			});
 			describe('#errors', function() {
-				it('should come back with an error of custom message if string is not in enum.', () => {
+				it('should come back with an error of post message if string is not in enum.', () => {
 					return expect(isvalid('123', {
 						type: String,
 						enum: ['this','is','a','test'],
@@ -555,7 +555,7 @@ describe('validate', function() {
 					.to.eventually.equal(3);
 			});
 			describe('#errors', function() {
-				it('should come back with error of custom message if input is not within range.', () => {
+				it('should come back with error of post message if input is not within range.', () => {
 					return expect(isvalid(1, {
 						type: Number,
 						range: '2-4',
