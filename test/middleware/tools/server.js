@@ -15,18 +15,18 @@ app.param('testParam', validate.param({
 }));
 
 app.param('cbTestParam', validate.param({
-	type: String, required: true
-}, function(req, res, next) {
-	res.sendStatus(201);
+	type: String, 
+	required: true,
+	custom: (data, schema, options) => {
+		options.res.sendStatus(201);
+	}
 }));
 
 app.get('/param/:testParam', function(req, res) {
 	res.sendStatus(200);
 });
 
-app.get('/cbParam/:cbTestParam', function(req, res) {
-	res.sendStatus(200);
-});
+app.get('/cbParam/:cbTestParam', function() {});
 
 app.get('/query',
 	validate.query({
@@ -47,12 +47,12 @@ app.post('/post',
 );
 
 // Not found route
-app.use(function(req, res, next) {
+app.use(function(req, res) {
 	res.status(400).json({ error: 'not-found' });
 });
 
 // Error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res, next_ignoreUnused) {
 	if (err.constructor.name == 'ValidationError') {
 		return res.status(400).json({error: 'validation-error', keyPath: err.keyPath.join('.'), message: err.message});
 	}

@@ -1,88 +1,76 @@
 /*jshint expr: true*/
 'use strict';
 
-var expect = require('chai').expect,
+const expect = require('chai').expect,
 	equals = require('../lib/equals.js');
 
-var testSyncAndAsync = function(desc, data1, data2, expects) {
-	it ('[async] ' + desc, function(done) {
-		equals(data1, data2, function(res) {
-			expects(res);
-			done();
-		});
-	});
-	it ('[sync]  ' + desc, function() {
-		expects(equals(data1, data2));
-	});
-};
-
 describe('equals', function() {
-	testSyncAndAsync('should return false if data is not of the same type (null).', 1, null, function(res) {
-		expect(res).to.be.false;
+	it('should return false if data is not of the same type (null).', () => {
+		return expect(equals(1, null)).to.eventually.eventually.be.false;
 	});
-	testSyncAndAsync('should return false if data is not of the same type.', 1, '1', function(res) {
-		expect(res).to.be.false;
+	it('should return false if data is not of the same type.', () => {
+		return expect(equals(1, '1')).to.eventually.be.false;
 	});
-	testSyncAndAsync('should return true if strings are equal.', 'This is a string', 'This is a string', function(res) {
-		expect(res).to.be.true;
+	it('should return true if strings are equal.', () => {
+		return expect(equals('This is a string', 'This is a string')).to.eventually.be.true;
 	});
-	testSyncAndAsync('should return false if string are equal', 'This is a string', 'This is another string', function(res) {
-		expect(res).to.be.false;
+	it('should return false if string are equal', () => {
+		return expect(equals('This is a string', 'This is another string')).to.eventually.be.false;
 	});
-	testSyncAndAsync ('should return true if numbers are equal.', 1, 1, function(res) {
-		expect(res).to.be.true;
+	it('should return true if numbers are equal.', () => {
+		return expect(equals(1, 1)).to.eventually.be.true;
 	});
-	testSyncAndAsync ('should return false if numbers are not equal.', 1, 2, function(res) {
-		expect(res).to.be.false;
+	it('should return false if numbers are not equal.', () => {
+		return expect(equals(1, 2)).to.eventually.be.false;
 	});
-	testSyncAndAsync ('should return true if booleans are equal.', false, false, function(res) {
-		expect(res).to.be.true;
+	it('should return true if booleans are equal.', () => {
+		return expect(equals(false, false)).to.eventually.be.true;
 	});
-	testSyncAndAsync ('should return false if booleans are not equal.', true, false, function(res) {
-		expect(res).to.be.false;
+	it('should return false if booleans are not equal.', () => {
+		return expect(equals(true, false)).to.eventually.be.false;
 	});
-	var d = new Date();
-	testSyncAndAsync ('should return true if dates are equal.', d, d, function(res) {
-		expect(res).to.be.true;
+	const d = new Date();
+	it('should return true if dates are equal.', () => {
+		return expect(equals(d, d)).to.eventually.be.true;
 	});
-	var d1 = new Date();
-	var d2 = new Date();
+	const d1 = new Date();
+	const d2 = new Date();
 	d2.setYear(d2.getFullYear() + 1);
-	testSyncAndAsync ('should return false if dates are not equal.', d1, d2, function(res) {
-		expect(res).to.be.false;
+	it('should return false if dates are not equal.', () => {
+		return expect(equals(d1, d2)).to.eventually.be.false;
 	});
-	testSyncAndAsync ('should return true if objects are equal.', {
-		awesome: true
-	}, {
-		awesome: true
-	}, function(res) {
-		expect(res).to.be.true;
+	it ('should return true if objects are equal.', () => {
+		return expect(equals({
+			awesome: true
+		}, {
+			awesome: true
+		})).to.eventually.be.true;
 	});
-	testSyncAndAsync ('should return false if object are not equal.', {
-		awesome: true
-	}, {
-		awesome: false
-	}, function(res) {
-		expect(res).to.be.false;
+	it ('should return false if object are not equal.', () => {
+		return expect(equals({
+			awesome: true
+		}, {
+			awesome: false
+		})).to.eventually.be.false;
 	});
-	testSyncAndAsync ('should return true if arrays are equal.', ['This','is','an','array'], ['This','is','an','array'], function(res) {
-		expect(res).to.be.true;
+	it('should return true if arrays are equal.', () => {
+		return expect(equals(['This','is','an','array'], ['This','is','an','array'])).to.eventually.be.true;
 	});
-	testSyncAndAsync ('should return false if arrays are not equal.', ['This','is','an','array'], ['This','is','another','array'], function(res) {
-		expect(res).to.be.false;
+	it('should return false if arrays are not equal.', () => {
+		return expect(equals(['This','is','an','array'], ['This','is','another','array'])).to.eventually.be.false;
 	});
-	testSyncAndAsync ('should return true if objects with arrays are equal.', {
-		obj: ['This','is','an','array']
-	}, {
-		obj: ['This','is','an','array']
-	}, function(res) {
-		expect(res).to.be.true;
+	it ('should return true if objects with arrays are equal.', () => {
+		return expect(equals({
+			obj: ['This','is','an','array']
+		}, {
+			obj: ['This','is','an','array']
+		})).to.eventually.be.true;
 	});
-	testSyncAndAsync ('should return false if objects with arrays are not equal.', {
-		obj: ['This','is','an','array']
-	}, {
-		obj: ['This','is','another','array']
-	}, function(res) {
-		expect(res).to.be.false;
+	it ('should return false if objects with arrays are not equal.', () => {
+		return expect(equals({
+			obj: ['This','is','an','array']
+		}, {
+			obj: ['This','is','another','array']
+		})).to.eventually.be.false;
 	});
 });

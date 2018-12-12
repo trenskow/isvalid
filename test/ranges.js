@@ -1,7 +1,6 @@
 'use strict';
 
-var expect = require('chai').expect,
-	should = require('chai').should(),
+const expect = require('chai').expect,
 	ranges = require('../lib/ranges.js');
 
 describe('ranges', function() {

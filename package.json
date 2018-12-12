@@ -15,18 +15,18 @@
     "connect"
   ],
   "dependencies": {
-    "merge": "^1.2.0"
+    "merge": "^1.2.1"
   },
   "devDependencies": {
-    "body-parser": "^1.13.3",
-    "chai": ">= 1.9.1",
-    "chai-as-promised": ">= 4.1.1",
-    "express": "^4.13.3",
-    "mocha": ">= 1.20.0",
-    "supertest": "^1.0.1"
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "express": "^4.16.4",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
   },
   "scripts": {
-    "test": "ISVALID_SILENCE=1 ./node_modules/mocha/bin/mocha ./test/index.js"
+    "test": "ISVALID_SILENCE=1 ./node_modules/mocha/bin/mocha -b ./test/index.js"
   },
   "repository": {
     "type": "git",
