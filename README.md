@@ -44,12 +44,12 @@
 		 * [`enum`](#enum)
 	 * [`Number` Validators](#number-validators)
 		 * [`range`](#range)
- * [`custom`](#custom)
+ * [`post`](#post)
 	 * [Asynchronous Example](#asynchronous-example)
 	 * [The Callback Function](#the-callback-function)
 	 * [Synchronous Example](#synchronous-example)
-	 * [Options with Custom Validators](#options-with-custom-validators)
-	 * [Multiple Custom Validators](#multiple-custom-validators)
+	 * [Options with post Validators](#options-with-post-validators)
+	 * [Multiple post Validators](#multiple-post-validators)
  * [Type Shortcuts](#type-shortcuts)
 	 * [Object Shortcuts](#object-shortcuts)
 	 * [Array Shortcuts](#array-shortcuts)
@@ -71,17 +71,32 @@ Usage: `isvalid(dataToValidate, validationSchema, callback)`
 
 Here's a simple example on how to use the validator.
 
-	var isvalid = require('isvalid');
+	const isvalid = require('isvalid');
 
 	isvalid(inputData, {
 		'user': { type: String, required: true },
 		'pass': { type: String, required: true }
-	}, function(err, validData) {
-		/*
-		err:		 Error describing invalid data.
-		validData: The validated data.
-		*/
+	}).then((data) => {
+		// Data was validated and valid data is available.
+	}).catch((err) => {
+		// A validation error occured.
 	});
+
+– or using `await`/`async`.
+
+	const isvalid = require('isvalid');
+	
+	try {
+		let data = await isvalid(inputData, {
+			'user': { type: String, required: true },
+			'pass': { type: String, required: true }
+		};
+		
+		// Data is validated.
+		
+	} catch(err) {
+	   // A validation error occured.
+	}
 
 ## As Connect or Express Middleware
 
@@ -118,7 +133,7 @@ Usage: `isvalid.validate.param(schema)` validates `req.param`.
 
 ## A Note on the Examples in this Document
 
-In order to be a complete schema, schemas must have at least the `type` and/or `custom` validator. But, as you will notice throughout this document, many of the examples lots of validators with neither. Instead they just use the type shortcuts.
+In order to be a complete schema, schemas must have at least the `type` and/or `post` validator. But, as you will notice throughout this document, many of the examples lots of validators with neither. Instead they just use the type shortcuts.
 
 This is because **isvalid** supports type shortcuts for all its supported types, and you are - if you want to help yourself - going to use them a lot. You can read more about [type shortcuts](#type-shortcuts) in the designated section at the near-bottom of this document.
 
@@ -153,7 +168,7 @@ These types are supported by the validator:
  * `Number`
  * `Boolean`
  * `Date`
- * and `custom` validators.
+ * and `post` validators.
 
 There are some validators that are common to all types, and some types have specific validators.
 
@@ -167,14 +182,14 @@ or if `type` is your only validator, you can also do this:
 
 In the above example the input must be of type `String`.
 
-All schemas must have at least a `type`, `custom` or `equal` validator - or a combination of any of them.
+All schemas must have at least a `type`, `post` or `equal` validator - or a combination of any of them.
 
 ### Validators Available to All Types
 
 These validators are supported by all types.
 
 #### `default`
-Defaults data to specific value if data is not present in input. It takes a specific value or it can call a custom function to retrieve the value.
+Defaults data to specific value if data is not present in input. It takes a specific value or it can call a post function to retrieve the value.
 
 Type: Any value or a function.
 
@@ -196,9 +211,7 @@ This works with all supported types - below with a boolean type:
 
 Now if the `receive-newsletter` field is absent in the data the validator will default it to `false`.
 
-##### Functions
-
-`default` also supports functions.
+> `default` also supports functions that returns a value or a promise (async functions).
 
 ###### Asynchronous Functions
 
@@ -437,7 +450,7 @@ Example:
 > The `unique` validator does a deep comparison on objects and arrays.
 
 ##### `autowrap`
-Type: `Boolean` or `String` of value `transparent`.
+Type: `Boolean`
 
 If the provided data is not an array - but it matches the subschema - this will wrap the data in an array before actual validation.
 
@@ -449,7 +462,7 @@ Example:
 		schema: { … }
 	}
 
-If `autowrap` is set to `true` and autowrap fails (the subschema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error. If, though, `autowrap` is set to `transparent` it will emit eventual errors as the failing subschema validation. This can be useful if you want to hide the fact, that the data can be wrapped in an array.
+If `autowrap` is set to `true` and autowrap fails (the subschema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error.
 
 > Default is `false`.
 
@@ -493,15 +506,13 @@ This ensures that the number is within a certain range. If not the validator sen
 
 > The `range` validator uses the same formatting as the array's [`len`](#len) validator described above.
 
-## `custom`
+## `post`
 
-Custom validators are for usage when the possibilities of the validation schema falls short. Custom validators basically outsources validation to a custom function.
+`post` are for usage when the possibilities of the validation schema falls short. `post` basically outsources validation to a post function.
 
-Custom validators are specified by the `custom` field of a schema.
+> `type` becomes optional when using `post`. You can completely leave out any validation and just use a `post` validator.
 
-> `type` becomes optional when using `custom`. You can completely leave out any validation and just use a `custom` validator.
-
-### Asynchronous Example
+### Example
 
 	{
 		type: Object,
@@ -509,43 +520,7 @@ Custom validators are specified by the `custom` field of a schema.
 			'low': Number,
 			'high': Number
 		}
-		'custom': function(data, schema, fn) {
-			if (data.low > data.high) {
-				return fn(new Error('low must be lower than high'));
-			}
-			fn(null, data);
-		}
-	}
-
-In the above example we have specified an object with two keys - `low` and `high`. The validator will first make sure, that the object validates to the schema. If it does it will then call the custom validator - which in this example calls the callback with an error if low is bigger than high.
-
-#### The Callback Function
-
-The asynchronous nature of the library, allows for asynchronous operations in custom functions.
-
-The custom function must take three parameters
-
- - *data* The data that needs validation
- - *schema* The schema to validate against
-	 - This enables you to use the schema to pass in options.
- - *fn* The callback function to call when validation either succeeds or fails.
-	 - The callback function takes two parameters
-	 - *err* An `Error` describing the validation error that occurred.
-	 - *data* The finished and validated object.
-
-> *Remark:* Errors are automatically converted into a `ValidationError` internally.
-
-### Synchronous Example
-
-The `custom` validator also supports synchronous functions, which is done by simple leaving out the callback parameter - and instead errors are thrown.
-
-	{
-		type: Object,
-		schema: {
-			'low': Number
-			'high': Number
-		}
-		'custom': function(data, schema) {
+		'post': async (data, schema) => {
 			if (data.low > data.high) {
 				throw new Error('low must be lower than high');
 			}
@@ -553,11 +528,15 @@ The `custom` validator also supports synchronous functions, which is done by sim
 		}
 	}
 
-> Thrown errors are caught and converted to a `ValidationError` internally.
+In the above example we have specified an object with two keys - `low` and `high`. The validator will first make sure, that the object validates to the schema. If it does it will then call the post validator - which in this example calls the callback with an error if low is bigger than high.
 
-### Options with Custom Validators
+> * `post` functions works both by returning promises (async functions) and returning a value.
+> * If no value is returned the data does not change.
+> * Thrown errors are caught and converted to a `ValidationError` internally.
 
-If you need to pass any options to your custom validator, you can do so by using the `options` property of the schema.
+### Options with post Validators
+
+If you need to pass any options to your post validator, you can do so by using the `options` property of the schema.
 
 An example below.
 
@@ -566,21 +545,21 @@ An example below.
 			options: {
 				myCustomOptions: 'here'
 			},
-			custom: function(data, schema, fn) {
+			post: function(data, schema, fn) {
 				// schema.options will now contain whatever options you supplied in the schema.
 				// In this example schema.options == { myCustomOptions: 'here'}.
 			}
 		}
 	}
 
-### Multiple Custom Validators
+### Multiple post Validators
 
-The `custom` validator also support an array of validators. Instead of providing a function, provide an array of functions. Synchronous and asynchronous can be mixed and matched as necessary.
+The `post` validator also support an array of validators. Instead of providing a function, provide an array of functions. Synchronous and asynchronous can be mixed and matched as necessary.
 
 An example.
 
 	{
-		custom: [
+		post: [
 			function(data, schema, fn) {
 				data(null, myValidatedData);
 			},
@@ -590,9 +569,9 @@ An example.
 		]
 	}
 
-If, though, any of the custom validator functions returns an error (either using the callback in an asynchronous function, or by throwing an error in a synchronous one), none of the rest of the custom validators in the custom validator chain will get called, and isvalid will return an error.
+If, though, any of the post validator functions returns an error (either using the callback in an asynchronous function, or by throwing an error in a synchronous one), none of the rest of the post validators in the post validator chain will get called, and isvalid will return an error.
 
-> The custom validator functions are called in order.
+> The post validator functions are called in order.
 
 ## Type Shortcuts
 
@@ -632,7 +611,7 @@ and is in fact the same as this:
 
 Which means that data should be an object with a `user` key of the type `String`.
 
-> *Remark:* Internally the library tests for object shortcuts by examining the absent of the `type` and `custom` validators. So if you need objects schemas with validators for keys with those names, you must explicitly format the object using `type` and `schema` - hence the shortcut cannot be used.
+> *Remark:* Internally the library tests for object shortcuts by examining the absent of the `type` and `post` validators. So if you need objects schemas with validators for keys with those names, you must explicitly format the object using `type` and `schema` - hence the shortcut cannot be used.
 
 ### Array Shortcuts
 

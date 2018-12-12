@@ -2,6 +2,17 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.0.0
+
+* Everything now works asynchronously using promises.
+* `allowUnknownKeys` is not officially removed.
+* `autowrap` no longer support `transparent`.
+* `custom` has been renamed `post`.
+* `custom` can now return a promise (be async).
+* `default` can now also both be a explicit value, a function that returns a value or a function that returns a promise.
+
+> Middleware for express and connect has not changed.
+
 ## Version 1.5.1
 
 * Allow any type to be specified as a custom error (useful for localization).
