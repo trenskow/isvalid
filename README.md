@@ -71,17 +71,32 @@ Usage: `isvalid(dataToValidate, validationSchema, callback)`
 
 Here's a simple example on how to use the validator.
 
-	var isvalid = require('isvalid');
+	const isvalid = require('isvalid');
 
 	isvalid(inputData, {
 		'user': { type: String, required: true },
 		'pass': { type: String, required: true }
-	}, function(err, validData) {
-		/*
-		err:		 Error describing invalid data.
-		validData: The validated data.
-		*/
+	}).then((data) => {
+		// Data was validated and valid data is available.
+	}).catch((err) => {
+		// A validation error occured.
 	});
+
+– or using `await`/`async`.
+
+	const isvalid = require('isvalid');
+	
+	try {
+		let data = await isvalid(inputData, {
+			'user': { type: String, required: true },
+			'pass': { type: String, required: true }
+		};
+		
+		// Data is validated.
+		
+	} catch(err) {
+	   // A validation error occured.
+	}
 
 ## As Connect or Express Middleware
 
@@ -196,9 +211,7 @@ This works with all supported types - below with a boolean type:
 
 Now if the `receive-newsletter` field is absent in the data the validator will default it to `false`.
 
-##### Functions
-
-`default` also supports functions.
+> `default` also supports functions that returns a value or a promise (async functions).
 
 ###### Asynchronous Functions
 
@@ -495,13 +508,11 @@ This ensures that the number is within a certain range. If not the validator sen
 
 ## `post`
 
-post validators are for usage when the possibilities of the validation schema falls short. post validators basically outsources validation to a post function.
-
-post validators are specified by the `post` field of a schema.
+`post` are for usage when the possibilities of the validation schema falls short. `post` basically outsources validation to a post function.
 
 > `type` becomes optional when using `post`. You can completely leave out any validation and just use a `post` validator.
 
-### Asynchronous Example
+### Example
 
 	{
 		type: Object,
@@ -509,43 +520,7 @@ post validators are specified by the `post` field of a schema.
 			'low': Number,
 			'high': Number
 		}
-		'post': function(data, schema, fn) {
-			if (data.low > data.high) {
-				return fn(new Error('low must be lower than high'));
-			}
-			fn(null, data);
-		}
-	}
-
-In the above example we have specified an object with two keys - `low` and `high`. The validator will first make sure, that the object validates to the schema. If it does it will then call the post validator - which in this example calls the callback with an error if low is bigger than high.
-
-#### The Callback Function
-
-The asynchronous nature of the library, allows for asynchronous operations in post functions.
-
-The post function must take three parameters
-
- - *data* The data that needs validation
- - *schema* The schema to validate against
-	 - This enables you to use the schema to pass in options.
- - *fn* The callback function to call when validation either succeeds or fails.
-	 - The callback function takes two parameters
-	 - *err* An `Error` describing the validation error that occurred.
-	 - *data* The finished and validated object.
-
-> *Remark:* Errors are automatically converted into a `ValidationError` internally.
-
-### Synchronous Example
-
-The `post` validator also supports synchronous functions, which is done by simple leaving out the callback parameter - and instead errors are thrown.
-
-	{
-		type: Object,
-		schema: {
-			'low': Number
-			'high': Number
-		}
-		'post': function(data, schema) {
+		'post': async (data, schema) => {
 			if (data.low > data.high) {
 				throw new Error('low must be lower than high');
 			}
@@ -553,7 +528,11 @@ The `post` validator also supports synchronous functions, which is done by simpl
 		}
 	}
 
-> Thrown errors are caught and converted to a `ValidationError` internally.
+In the above example we have specified an object with two keys - `low` and `high`. The validator will first make sure, that the object validates to the schema. If it does it will then call the post validator - which in this example calls the callback with an error if low is bigger than high.
+
+> * `post` functions works both by returning promises (async functions) and returning a value.
+> * If no value is returned the data does not change.
+> * Thrown errors are caught and converted to a `ValidationError` internally.
 
 ### Options with post Validators
 
