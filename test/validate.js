@@ -102,6 +102,11 @@ const commonTests = {
 			it('should call default if default is a value.', () => {
 				return expect(isvalid(undefined, { type: type, default: validData })).to.eventually.be.a(type.name);
 			});
+			it('should call default with options if options are provided.', () => {
+				return expect(isvalid(undefined, { type: type, default: (options) => {
+					return options.value;
+				}}, { value: validData })).to.eventually.equal(validData);
+			});
 		});
 	},
 	equal: function(type, validData, invalidData) {
@@ -145,6 +150,11 @@ const commonTests = {
 			it('should return original object if synchronous function doesn\'t return.', () => {
 				return expect(isvalid('test', {
 					post: function() {}
+				})).to.eventually.be.a('String').equal('test');
+			});
+			it('should accept async functions', () => {
+				return expect(isvalid('test', {
+					post: async function() {}
 				})).to.eventually.be.a('String').equal('test');
 			});
 			it('should reformat err if post is specified and returns an error.', () => {
