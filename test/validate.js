@@ -238,6 +238,13 @@ describe('validate', function() {
 	it('should throw an error if schema is not provided.', () => {
 		return expect(isvalid({})).to.eventually.be.rejectedWith(Error);
 	});
+	it('should allow for custom key path in options', () => {
+		return expect(isvalid({}, { type: String }, { keyPath: 'custom.keyPath' }))
+			.to.eventually.be.rejectedWith(Error)
+			.to.have.property('keyPath')
+			.to.have.property(0)
+			.to.equal('custom');
+	});
 	describe('type conversion', function() {
 		it('should convert string values into numbers if string contains a number.', () => {
 			return expect(isvalid('123.987', Number)).to.eventually.equal(123.987);

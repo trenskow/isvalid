@@ -2,6 +2,10 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.1.0
+
+* Options now support a custom base key path.
+
 ## Version 2.0.0
 
 * Everything now works asynchronously using promises.
