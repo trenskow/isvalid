@@ -45,8 +45,9 @@
         * [`range`](#range)
   * [`post`](#post)
     + [Example](#example-2)
-    + [Options with post Validators](#options-with-post-validators)
+    + [Options with Post Validators](#options-with-post-validators)
     + [Multiple post Validators](#multiple-post-validators)
+  * [`pre`](#pre)
   * [Type Shortcuts](#type-shortcuts)
     + [Object Shortcuts](#object-shortcuts)
     + [Array Shortcuts](#array-shortcuts)
@@ -530,9 +531,9 @@ In the above example we have specified an object with two keys - `low` and `high
 > * If no value is returned the data does not change.
 > * Thrown errors are caught and converted to a `ValidationError` internally.
 
-### Options with post Validators
+### Options with Post Validators
 
-If you need to pass any options to your post validator, you can do so by using the `options` property of the schema.
+If you need to pass any options to your custom validator, you can do so by using the `options` property of the schema.
 
 An example below.
 
@@ -548,7 +549,7 @@ An example below.
 		}
 	}
 
-### Multiple post Validators
+### Multiple Post Validators
 
 The `post` validator also support an array of validators. Instead of providing a function, provide an array of functions. Synchronous and asynchronous can be mixed and matched as necessary.
 
@@ -568,6 +569,10 @@ An example.
 If, though, any of the post validator functions returns an error (either using the callback in an asynchronous function, or by throwing an error in a synchronous one), none of the rest of the post validators in the post validator chain will get called, and isvalid will return an error.
 
 > The post validator functions are called in order.
+
+## `pre`
+
+`pre` does the exact same thing as `post` described above, except it is called and validated before any other validators are validated.
 
 ## Type Shortcuts
 

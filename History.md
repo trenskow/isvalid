@@ -2,6 +2,10 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.2.0
+
+* Added the post custom validators that are validated before any other validator is validated.
+
 ## Version 2.1.0
 
 * Options now support a custom base key path.

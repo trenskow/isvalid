@@ -21,13 +21,13 @@ const commonTests = {
 				})).to.eventually.be.a(type.name);
 			});
 			describe('#errors', function() {
-				it(`should come back with an error of post message if input is not a(n) ${type.name}.`, () => {
+				it(`should come back with an error of custom message if input is not a(n) ${type.name}.`, () => {
 					return expect(isvalid(invalidData, {
 						type: type,
 						errors: {
-							type: 'Type post error message.'
+							type: 'Type custom error message.'
 						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Type post error message.');
+					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Type custom error message.');
 				});
 			});
 		});
@@ -47,14 +47,14 @@ const commonTests = {
 				})).to.eventually.be.a(type.name);
 			});
 			describe('#errors', function() {
-				it('should come back with an error with post message if required and input is undefined.', () => {
+				it('should come back with an error with custom message if required and input is undefined.', () => {
 					return expect(isvalid(undefined, {
 						type: type,
 						required: true,
 						errors: {
-							required: 'Required post error message.'
+							required: 'Required custom error message.'
 						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Required post error message.');
+					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Required custom error message.');
 				});
 			});
 		});
@@ -75,14 +75,14 @@ const commonTests = {
 				})).to.eventually.be.null;
 			});
 			describe('#errors', function() {
-				it('should come back with an error with post message if required and does not allow null and input is null.', () => {
+				it('should come back with an error with custom message if required and does not allow null and input is null.', () => {
 					expect(isvalid(null, {
 						type: type,
 						required: true,
 						errors: {
-							allowNull: 'Allow null post error message.'
+							allowNull: 'Allow null custom error message.'
 						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Allow null post error message.');
+					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Allow null custom error message.');
 				});
 			});
 		});
@@ -172,6 +172,24 @@ const commonTests = {
 				}, {
 					test: true
 				})).to.not.be.rejected;
+			});
+			it('should first validate using pre and then validations,', () => {
+				let s = isvalid({
+					'low': 0
+				}, {
+					type: Object,
+					schema: {
+						low: { type: Number },
+						high: { type: Number, default: 10 }
+					},
+					pre: function(obj) {
+						expect(obj.high).to.be.undefined;
+					}
+				});
+				return Promise.all([
+					expect(s).to.eventually.have.property('low').equal(0),
+					expect(s).to.eventually.have.property('high').equal(10)
+				]);
 			});
 			it('should first validate using validators and then post.', () => {
 				let s = isvalid({

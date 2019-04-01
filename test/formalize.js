@@ -140,6 +140,12 @@ describe('schema', function() {
 		it('should come back with post as an array.', () => {
 			return expect(formalize({ post: [ function() {} ] })).to.eventually.have.property('post').to.be.an('array');
 		});
+		it('should come back with pre wrapped in an array.', () => {
+			return expect(formalize({ pre: function() {} })).to.eventually.have.property('pre').to.be.an('array');
+		});
+		it('should come back with pre as an array.', () => {
+			return expect(formalize({ pre: [ function() {} ] })).to.eventually.have.property('pre').to.be.an('array');
+		});
 		it('should come back with errors set on the errors key.', () => {
 			let s = formalize({
 				type: [Boolean, 'Boolean.'],
