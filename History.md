@@ -2,6 +2,10 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.3.0
+
+* Changed `ValidationError` and `SchemaError` to `Error` subclass.
+
 ## Version 2.2.0
 
 * Added the post custom validators that are validated before any other validator is validated.
