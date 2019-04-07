@@ -30,17 +30,11 @@ describe('schema', function() {
 		it('should throw error if type is String and enum is not array of strings.', () => {
 			return expect(formalize({ type: String, enum: ['this','is',1,'test'] })).to.eventually.be.rejectedWith(SchemaError);
 		});
-		it('should throw an error if schema type is unknown.', () => {
-			return expect(formalize({ type: Error })).to.eventually.be.rejectedWith(SchemaError);
-		});
-		it('should throw an error if schema is not of supported type.', () => {
-			return expect(formalize({ type: RegExp })).to.eventually.be.rejectedWith(SchemaError);
+		it('should throw an error if schema type cannot be determined.', () => {
+			return expect(formalize({ type: '' })).to.eventually.be.rejectedWith(SchemaError);
 		});
 		it('should throw an error if unknownKeys is not \'allow\', \'deny\' or \'remove\'.', () => {
 			return expect(formalize({ type: Object, unknownKeys: 'test' })).to.eventually.be.rejectedWith(SchemaError);
-		});
-		it('should throw an error if array schema is unknown type.', () => {
-			return expect(formalize({ type: Array, schema: RegExp })).to.eventually.be.rejectedWith(SchemaError);
 		});
 		it('should throw an error if object schema is unknown type.', () => {
 			return expect(formalize({ type: Object, schema: RegExp })).to.eventually.be.rejectedWith(SchemaError);

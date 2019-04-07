@@ -5,7 +5,14 @@ const chai = require('chai'),
 	expect = chai.expect,
 	assert = chai.assert,
 	ValidationError = require('../lib/errors/ValidationError.js'),
-	isvalid = require('../');
+	isvalid = require('../'),
+	utils = require('../lib/utils.js');
+
+class Test {
+	constructor() {
+		this.test = 'test';
+	}
+}
 
 const commonTests = {
 	type: function(type, validData, invalidData) {
@@ -18,7 +25,9 @@ const commonTests = {
 			it(`should come back with no error if input is a(n) ${type.name}.`, () => {
 				return expect(isvalid(validData, {
 					type: type
-				})).to.eventually.be.a(type.name);
+				})).to.eventually.satisfy((data) => {
+					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+				});
 			});
 			describe('#errors', function() {
 				it(`should come back with an error of custom message if input is not a(n) ${type.name}.`, () => {
@@ -44,7 +53,9 @@ const commonTests = {
 				return expect(isvalid(validData, {
 					type: type,
 					required: true
-				})).to.eventually.be.a(type.name);
+				})).to.eventually.satisfy((data) => {
+					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+				});
 			});
 			describe('#errors', function() {
 				it('should come back with an error with custom message if required and input is undefined.', () => {
@@ -92,15 +103,21 @@ const commonTests = {
 			it('should call default if default is function and returns a promise (async function).', () => {
 				return expect(isvalid(undefined, { type: type, default: async () => {
 					return validData;
-				}})).to.eventually.be.a(type.name);
+				}})).to.eventually.satisfy((data) => {
+					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+				});
 			});
 			it('should call default if default is a function.', () => {
 				return expect(isvalid(undefined, { type: type, default: () => {
 					return validData;
-				}})).to.eventually.be.a(type.name);
+				}})).to.eventually.satisfy((data) => {
+					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+				});
 			});
 			it('should call default if default is a value.', () => {
-				return expect(isvalid(undefined, { type: type, default: validData })).to.eventually.be.a(type.name);
+				return expect(isvalid(undefined, { type: type, default: validData })).to.eventually.satisfy((data) => {
+					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+				});
 			});
 			it('should call default with options if options are provided.', () => {
 				return expect(isvalid(undefined, { type: type, default: (options) => {
@@ -604,5 +621,8 @@ describe('validate', function() {
 	});
 	describe('date validator', function() {
 		commonTests.all(Date, new Date(), 123);
+	});
+	describe('other validator', function() {
+		commonTests.all(Test, new Test(), 123);
 	});
 });

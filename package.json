@@ -1,6 +1,6 @@
 {
   "name": "isvalid",
-  "version": "2.3.1",
+  "version": "2.4.1",
   "description": "Async JSON validation library for node.js.",
   "main": "./index.js",
   "keywords": [
@@ -26,7 +26,7 @@
     "supertest": "^3.3.0"
   },
   "scripts": {
-    "test": "ISVALID_SILENCE=1 ./node_modules/mocha/bin/mocha -b ./test/index.js"
+    "test": "ISVALID_SILENCE=1 ./node_modules/mocha/bin/mocha ./test/index.js"
   },
   "repository": {
     "type": "git",
