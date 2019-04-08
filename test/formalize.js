@@ -175,5 +175,10 @@ describe('schema', function() {
 				equal: '123'
 			})).to.eventually.have.property('equal').equal('123');
 		});
+		it('should come back with a priority if non is provided', () => {
+			return expect(formalize({
+				type: Number
+			})).to.eventually.have.property('priority').equal(10);
+		});
 	});
 });

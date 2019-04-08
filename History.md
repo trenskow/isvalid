@@ -2,6 +2,10 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.50
+
+Added the ability to prioritize order of validation when validating object keys. Use the `priority` key.
+
 ## Version 2.4.0
 
 Now supports custom types (classes) also.

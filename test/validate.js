@@ -260,6 +260,18 @@ const commonTests = {
 					]
 				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'post');
 			});
+			it('should have the full validated data so far as a parameter', () => {
+				return expect(isvalid({ why: {} }, {
+					'awesome': { type: Boolean, priority: 1, default: true },
+					'why': {
+						'reason': { type: String, default: 'It just is!' },
+						'who': { type: String, post: (data, schema, options, validatedData) => {
+							expect(validatedData.awesome).to.be.true;
+							return 'isvalid';
+						} }
+					}
+				})).to.eventually.have.property('why').to.have.property('who').to.equal('isvalid');
+			});
 		});
 	},
 	all: function(type, validData, invalidData) { var self = this;
@@ -334,6 +346,20 @@ describe('validate', function() {
 		});
 		it('should come back with no error and validData if object shortcut is empty.', () => {
 			return expect(isvalid({}, {})).to.eventually.be.an('Object');
+		});
+		describe('priority', function() {
+			it('should validate higher priority before validating others', () => {
+				let validated = false;
+				return expect(isvalid({}, {
+					awesome: { type: Boolean, post: () => {
+						expect(validated).to.be.true;
+						return true;
+					}, },
+					why: { type: String, priority: 1, default: 'it just is!', post: () => {
+						validated = true;
+					} }
+				})).to.eventually.have.property('why').equals('it just is!');
+			});
 		});
 		describe('unknownKeys', function() {
 			it('should come back with unknown keys intact if unknownKeys is \'allow\'.', () => {
