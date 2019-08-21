@@ -22,6 +22,12 @@ app.param('cbTestParam', validate.param({
 	}
 }));
 
+app.get('/parameter/:testParam', 
+	validate.parameter('testParam', Number),
+	(req, res) => {
+		res.sendStatus(200);
+	});
+
 app.get('/param/:testParam', function(req, res) {
 	res.sendStatus(200);
 });

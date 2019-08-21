@@ -35,6 +35,25 @@ describe('middleware', function() {
 
 	});
 
+	describe('parameter validator', function() {
+
+		it ('should come back with 400 if parameter is not a number.', function(done) {
+			request(app)
+				.get('/parameter/not-a-number')
+				.expect(400, function(err, res) {
+					expect(res.body).to.have.property('error').equal('validation-error');
+					done(err);
+				});
+		});
+
+		it ('should come back with 200 if parameter matches schema', function(done) {
+			request(app)
+				.get('/parameter/123')
+				.expect(200, done);
+		});
+
+	});
+
 	describe('query validator', function() {
 
 		it ('should come back with 400 if query matches schema.', function(done) {

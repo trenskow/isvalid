@@ -102,14 +102,16 @@ Connect and Express middleware is build in.
 Usage: `isvalid.validate.body(schema)` validates `req.body`.
 Usage: `isvalid.validate.query(schema)` validates `req.query`.
 Usage: `isvalid.validate.param(schema)` validates `req.param`.
+Usage: `isvalid.validate.parameter(id, schema)` validates `req.param` as a route.
 
 ### Example
 
 	var validate = require('isvalid').validate;
 
-	app.param('myparam', validate.param(Number));
+	app.param('myparam', validate.param(Number)); // Validates parameter through param
 
 	app.post('/mypath/:myparam',
+		validate.parameter('myparam', Number), // Validates parameter through route.
 		validate.query({
 			'filter': String
 		}),
