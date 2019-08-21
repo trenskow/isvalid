@@ -2,7 +2,11 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
-## Version 2.50
+## Version 2.5.0
+
+Added a middleware to validate parameters as a route through `validate.parameter(id, schema)`.
+
+## Version 2.4.6
 
 Added the ability to prioritize order of validation when validating object keys. Use the `priority` key.
 

@@ -49,7 +49,10 @@ describe('middleware', function() {
 		it ('should come back with 200 if parameter matches schema', function(done) {
 			request(app)
 				.get('/parameter/123')
-				.expect(200, done);
+				.expect(200, function(err, res) {
+					expect(res.text).to.equal('124');
+					done(err);
+				});
 		});
 
 	});
