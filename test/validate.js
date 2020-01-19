@@ -57,6 +57,12 @@ const commonTests = {
 					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
 				});
 			});
+			it('should prioritize concrete over defaults.', () => {
+				return expect(isvalid(undefined, {
+					type: type,
+					required: false
+				}, { defaults: { required: true }})).to.eventually.equal(undefined);
+			});
 			describe('#errors', function() {
 				it('should come back with an error with custom message if required and input is undefined.', () => {
 					return expect(isvalid(undefined, {
@@ -84,6 +90,12 @@ const commonTests = {
 					required: true,
 					allowNull: true
 				})).to.eventually.be.null;
+			});
+			it('should prioritize concrete over defaults.', () => {
+				return expect(isvalid(null, {
+					type: type,
+					allowNull: false
+				}, { defaults: { allowNull: true }})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('validator', 'allowNull');
 			});
 			describe('#errors', function() {
 				it('should come back with an error with custom message if required and does not allow null and input is null.', () => {
@@ -549,6 +561,12 @@ describe('validate', function() {
 						test: Boolean
 					}])).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'type');
 				});
+				it('should prioritize concrete over defaults.', () => {
+					return expect(isvalid(true, {
+						type: Array,
+						autowrap: false
+					}, { defaults: { autowrap: true }})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'type');
+				});
 			});
 		});
 	});
@@ -569,6 +587,12 @@ describe('validate', function() {
 			it('should come back with the string untrimmed if trim is not specified', () => {
 				return expect(isvalid('\t123abc   ', String))
 					.to.eventually.equal('\t123abc   ');
+			});
+			it('should prioritize concrete over defaults.', () => {
+				return expect(isvalid(' 123', {
+					type: String,
+					trim: false
+				}, { defaults: { trim: true }})).to.eventually.equal(' 123');
 			});
 		});
 		describe('match', function() {
