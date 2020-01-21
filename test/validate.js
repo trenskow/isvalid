@@ -284,6 +284,9 @@ const commonTests = {
 					}
 				})).to.eventually.have.property('why').to.have.property('who').to.equal('isvalid');
 			});
+			it ('should accept `null` as a valid return valur', () => {
+				return expect(isvalid('', { type: String, post: () => null})).to.eventually.equal(null);
+			});
 		});
 	},
 	all: function(type, validData, invalidData) { var self = this;
