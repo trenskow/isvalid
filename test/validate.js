@@ -136,6 +136,9 @@ const commonTests = {
 					return options.value;
 				}}, { value: validData })).to.eventually.equal(validData);
 			});
+			it('should allow `null` as a valid value.', () => {
+				return expect(isvalid(undefined, { type: type, default: null})).to.eventually.equal(null);
+			});
 		});
 	},
 	equal: function(type, validData, invalidData) {
@@ -284,7 +287,7 @@ const commonTests = {
 					}
 				})).to.eventually.have.property('why').to.have.property('who').to.equal('isvalid');
 			});
-			it ('should accept `null` as a valid return valur', () => {
+			it ('should accept `null` as a valid return value.', () => {
 				return expect(isvalid('', { type: String, post: () => null})).to.eventually.equal(null);
 			});
 		});
