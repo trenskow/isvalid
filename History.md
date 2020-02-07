@@ -2,17 +2,22 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.6.0
+
+* Added the ability to also use strings to specify type.
+* Bugfixes
+
 ## Version 2.5.0
 
-Added a middleware to validate parameters as a route through `validate.parameter(id, schema)`.
+* Added a middleware to validate parameters as a route through `validate.parameter(id, schema)`.
 
 ## Version 2.4.6
 
-Added the ability to prioritize order of validation when validating object keys. Use the `priority` key.
+* Added the ability to prioritize order of validation when validating object keys. Use the `priority` key.
 
 ## Version 2.4.0
 
-Now supports custom types (classes) also.
+* Now supports custom types (classes) also.
 
 ## Version 2.3.0
 

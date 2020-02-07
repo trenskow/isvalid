@@ -17,20 +17,20 @@ class Test {
 const commonTests = {
 	type: function(type, validData, invalidData) {
 		describe('type', function() {
-			it(`should come back with an error if input is not a(n) ${type.name}.`, () => {
+			it(`should come back with an error if input is not a(n) ${utils.typeName(type)}.`, () => {
 				return expect(isvalid(invalidData, type))
 					.to.eventually.be.rejectedWith(ValidationError)
 					.and.to.have.property('validator', 'type');
 			});
-			it(`should come back with no error if input is a(n) ${type.name}.`, () => {
+			it(`should come back with no error if input is a(n) ${utils.typeName(type)}.`, () => {
 				return expect(isvalid(validData, {
 					type: type
 				})).to.eventually.satisfy((data) => {
-					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			describe('#errors', function() {
-				it(`should come back with an error of custom message if input is not a(n) ${type.name}.`, () => {
+				it(`should come back with an error of custom message if input is not a(n) ${utils.typeName(type)}.`, () => {
 					return expect(isvalid(invalidData, {
 						type: type,
 						errors: {
@@ -54,7 +54,7 @@ const commonTests = {
 					type: type,
 					required: true
 				})).to.eventually.satisfy((data) => {
-					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should prioritize concrete over defaults.', () => {
@@ -116,19 +116,19 @@ const commonTests = {
 				return expect(isvalid(undefined, { type: type, default: async () => {
 					return validData;
 				}})).to.eventually.satisfy((data) => {
-					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should call default if default is a function.', () => {
 				return expect(isvalid(undefined, { type: type, default: () => {
 					return validData;
 				}})).to.eventually.satisfy((data) => {
-					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should call default if default is a value.', () => {
 				return expect(isvalid(undefined, { type: type, default: validData })).to.eventually.satisfy((data) => {
-					return utils.instanceTypeName(data) == utils.typeName(type) || (data instanceof type);
+					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should call default with options if options are provided.', () => {
@@ -279,8 +279,8 @@ const commonTests = {
 				return expect(isvalid({ why: {} }, {
 					'awesome': { type: Boolean, priority: 1, default: true },
 					'why': {
-						'reason': { type: String, default: 'It just is!' },
-						'who': { type: String, post: (data, schema, options, validatedData) => {
+						'reason': { type: 'string', default: 'It just is!' },
+						'who': { type: 'string', post: (data, schema, options, validatedData) => {
 							expect(validatedData.awesome).to.be.true;
 							return 'isvalid';
 						} }
@@ -288,7 +288,7 @@ const commonTests = {
 				})).to.eventually.have.property('why').to.have.property('who').to.equal('isvalid');
 			});
 			it ('should accept `null` as a valid return value.', () => {
-				return expect(isvalid('', { type: String, post: () => null})).to.eventually.equal(null);
+				return expect(isvalid('', { type: 'string', post: () => null})).to.eventually.equal(null);
 			});
 		});
 	},
@@ -304,7 +304,7 @@ describe('validate', function() {
 		return expect(isvalid({})).to.eventually.be.rejectedWith(Error);
 	});
 	it('should allow for custom key path in options', () => {
-		return expect(isvalid({}, { type: String }, { keyPath: 'custom.keyPath' }))
+		return expect(isvalid({}, { type: 'string' }, { keyPath: 'custom.keyPath' }))
 			.to.eventually.be.rejectedWith(Error)
 			.to.have.property('keyPath')
 			.to.have.property(0)
@@ -363,7 +363,7 @@ describe('validate', function() {
 				why: 'it just is!'
 			}, {
 				awesome: Boolean,
-				why: String
+				why: 'string'
 			});
 			return Promise.all([
 				expect(s).to.eventually.have.property('awesome').equals(true),
@@ -381,7 +381,7 @@ describe('validate', function() {
 						expect(validated).to.be.true;
 						return true;
 					}, },
-					why: { type: String, priority: 1, default: 'it just is!', post: () => {
+					why: { type: 'string', priority: 1, default: 'it just is!', post: () => {
 						validated = true;
 					} }
 				})).to.eventually.have.property('why').equals('it just is!');
@@ -471,7 +471,7 @@ describe('validate', function() {
 				why: 'it just is!'
 			}], [{
 				awesome: Boolean,
-				why: String
+				why: 'string'
 			}]);
 			return Promise.all([
 				expect(s).to.eventually.be.an('Array').of.length(1),
@@ -526,7 +526,7 @@ describe('validate', function() {
 				return expect(isvalid(['This', 'is', 'an', 'array'], {
 					type: Array,
 					unique: true,
-					schema: String
+					schema: 'string'
 				})).to.eventually.have.length(4);
 			});
 			describe('#errors', function() {
@@ -587,42 +587,42 @@ describe('validate', function() {
 	describe('string validator', function() {
 		commonTests.all(String, 'string', 123);
 		it('should come back with no error and input same as output if string is supplied.', () => {
-			return expect(isvalid('123', String)).to.eventually.be.a('String').equals('123');
+			return expect(isvalid('123', 'string')).to.eventually.be.a('String').equals('123');
 		});
 		describe('trim', function() {
 			it('should come back with trimmed string when trim is set to true.', () => {
-				return expect(isvalid('\t123abc   ', { type: String, trim: true }))
+				return expect(isvalid('\t123abc   ', { type: 'string', trim: true }))
 					.to.eventually.equal('123abc');
 			});
 			it('should come back with trimmed string when trim option is true.', () => {
-				return expect(isvalid('\t123abc   ', String, { defaults: { trim: true }}))
+				return expect(isvalid('\t123abc   ', 'string', { defaults: { trim: true }}))
 					.to.eventually.equal('123abc');
 			});
 			it('should come back with the string untrimmed if trim is not specified', () => {
-				return expect(isvalid('\t123abc   ', String))
+				return expect(isvalid('\t123abc   ', 'string'))
 					.to.eventually.equal('\t123abc   ');
 			});
 			it('should prioritize concrete over defaults.', () => {
 				return expect(isvalid(' 123', {
-					type: String,
+					type: 'string',
 					trim: false
 				}, { defaults: { trim: true }})).to.eventually.equal(' 123');
 			});
 		});
 		describe('match', function() {
 			it('should come back with an error if string does not match RegExp.', () => {
-				return expect(isvalid('123', { type: String, match: /^[a-z]+$/ }))
+				return expect(isvalid('123', { type: 'string', match: /^[a-z]+$/ }))
 					.to.eventually.be.rejectedWith(ValidationError)
 					.and.to.have.property('validator', 'match');
 			});
 			it('should come back with no error and validData should match input string when match is specified and input matches.', () => {
-				return expect(isvalid('123', { type: String, match: /^[0-9]+$/ }))
+				return expect(isvalid('123', { type: 'string', match: /^[0-9]+$/ }))
 					.to.eventually.equal('123');
 			});
 			describe('#errors', function() {
 				it('should come back with an error of post message if string does not match RegExp.', () => {
 					return expect(isvalid('123', {
-						type: String,
+						type: 'string',
 						match: /^[a-z]+$/,
 						errors: {
 							match: 'Must be a string of letters from a to z.'
@@ -633,18 +633,18 @@ describe('validate', function() {
 		});
 		describe('enum', function() {
 			it('should come back with an error if string is not in enum.', () => {
-				return expect(isvalid('123', { type: String, enum: ['this','is','a','test'] }))
+				return expect(isvalid('123', { type: 'string', enum: ['this','is','a','test'] }))
 					.to.eventually.be.rejectedWith(ValidationError)
 					.and.have.property('validator', 'enum');
 			});
 			it('should come back with no error if string is in enum.', () => {
-				return expect(isvalid('test', { type: String, enum: ['this','is','a','test'] }))
+				return expect(isvalid('test', { type: 'string', enum: ['this','is','a','test'] }))
 					.to.eventually.be.a('String').equal('test');
 			});
 			describe('#errors', function() {
 				it('should come back with an error of post message if string is not in enum.', () => {
 					return expect(isvalid('123', {
-						type: String,
+						type: 'string',
 						enum: ['this','is','a','test'],
 						errors: {
 							enum: 'Must be a word from the sentence "this is a test".'
@@ -684,7 +684,7 @@ describe('validate', function() {
 		});
 	});
 	describe('date validator', function() {
-		commonTests.all(Date, new Date(), 123);
+		commonTests.all('date', new Date(), 123);
 	});
 	describe('other validator', function() {
 		commonTests.all(Test, new Test(), 123);
