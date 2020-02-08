@@ -2,6 +2,11 @@
 
 NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
 
+## Version 2.7.0
+
+* The ability for custom errors has been under the hood for some time - just not very well tested. Now it's official.
+* Added the `len` validator on `String`s.
+
 ## Version 2.6.0
 
 * Added the ability to also use strings to specify type.

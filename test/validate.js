@@ -653,6 +653,27 @@ describe('validate', function() {
 				});
 			});
 		});
+		describe('length', function() {
+			it('should come back with an error if string is not with range.', () => {
+				return expect(isvalid('123', { type: 'string', len: '-2'}))
+					.to.eventually.be.rejectedWith(ValidationError)
+					.and.have.property('validator', 'len');
+			});
+			it('should come back with no error if string is within range.', () => {
+				return expect(isvalid('123', {
+					type: 'string',
+					len: '2-'
+				}));
+			});
+			describe('#errors', function() {
+				it ('should come back with a custom error message', () => {
+					return expect(isvalid('123', {
+						type: 'string',
+						len: ['-2', 'My custom error'],
+					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'My custom error');
+				});
+			});
+		});
 	});
 	describe('number validator', function() {
 		commonTests.all(Number, 123, []);

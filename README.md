@@ -39,6 +39,7 @@
         * [`autowrap`](#autowrap)
       - [`String` Validators](#string-validators)
         * [`trim`](#trim)
+		* [`len`](#len-2)
         * [`match`](#match)
         * [`enum`](#enum)
       - [`Number` Validators](#number-validators)
@@ -56,6 +57,8 @@
     + [Numbers](#numbers)
     + [Booleans](#booleans)
     + [Dates](#dates)
+  * [Custom Error Messages](#custom-error-shortcuts)
+    + [Shortcut](#shortcut)
 * [License](#license)
 
 # How to Use
@@ -474,6 +477,11 @@ Type: `Boolean`
 
 This does not do any actual validation. Instead it trims the input in both ends - before any other validators are checked. Use this if you want to remove any unforeseen white spaces added by the user.
 
+##### `len`
+Type: `String` or `Number`
+
+This ensures that the string's length is within a specified range. You can use the same formatting as `Array`'s [`len`](#len) validator.
+
 ##### `match`
 Type: `RegExp`
 
@@ -665,6 +673,35 @@ Likewise will schemas of type `Boolean` be automatically converted into a `Boole
 If the schema is of type `Date` and a `String` containing an [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) formatted date is supplied, it will automatically be parsed and converted into a `Date`.
 
 ISO-8601 is the date format that `JSON.stringify(...)` convert `Date` instances into, so this allows you to just serialize an object to JSON on - as an example - the client side, and then **isvalid** will automatically convert that into a `Date` instance when validating on the server side.
+
+## Custom Error Messages
+
+You can provide custom error message by using a specialized `error` validator in your schema.
+
+Below is an example.
+
+````javascript
+{
+	type: String,
+	len: '2-',
+	errors: {
+		len: 'Must contain at least two characters.'
+	}
+}
+````
+
+### Shortcut
+
+There is also a shortcut version, you can use. You simply wrap any validators in an `Array`, where the first is the validator value and the last is the custom error message.
+
+Below is an example building on the one above.
+
+````javascript
+{
+	type: String,
+	len: ['2-', 'Must contain at least two characters.']
+}
+````
 
 # License
 

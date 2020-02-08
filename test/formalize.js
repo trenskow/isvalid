@@ -153,23 +153,6 @@ describe('schema', function() {
 				expect(s).to.eventually.have.property('errors').to.have.property('required').equal('Required.')
 			]);
 		});
-		it('should come back with any type set on the errors key.', () => {
-			let s = formalize({
-				type: [Boolean, {
-					'en': 'Boolean.'
-				}],
-				required: [true, {
-					'en': 'Required.'
-				}]
-			});
-			return Promise.all([
-				expect(s).to.eventually.have.property('type').equal(Boolean),
-				expect(s).to.eventually.have.property('required').equal(true),
-				expect(s).to.eventually.have.property('errors').be.an('object'),
-				expect(s).to.eventually.have.property('errors').to.have.property('type').to.have.property('en').equal('Boolean.'),
-				expect(s).to.eventually.have.property('errors').to.have.property('required').to.have.property('en').equal('Required.')
-			]);
-		});
 		it('should come back with equal formalized.', () => {
 			return expect(formalize({
 				equal: '123'
