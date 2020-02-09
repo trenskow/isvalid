@@ -7,9 +7,6 @@
 
 # Table of Content
 
-- [isvalid](#isvalid)
-  * [![npm version](#npm-version)
-- [Table of Content](#table-of-content)
 - [How to Use](#how-to-use)
   * [Example](#example)
   * [As Connect or Express Middleware](#as-connect-or-express-middleware)
