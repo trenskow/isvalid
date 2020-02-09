@@ -102,7 +102,7 @@ try {
 }
 ````
 
-> There is also build-in support for usage as an [express](https://npmjs.org/package/express) or [connect](https://npmjs.org/package/connect) middleware – see the - [As Connect or Express Middleware](#as-connect-or-express-middleware) section below for more information.
+> There is also build-in support for usage as an [express](https://npmjs.org/package/express) or [connect](https://npmjs.org/package/connect) middleware – see the [As Connect or Express Middleware](#as-connect-or-express-middleware) section below for more information.
 
 # How it Works
 
