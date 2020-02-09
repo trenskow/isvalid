@@ -9,8 +9,6 @@
 
 - [How to Use](#how-to-use)
   * [Example](#example)
-  * [As Connect or Express Middleware](#as-connect-or-express-middleware)
-    + [Example](#example-1)
 - [How it Works](#how-it-works)
   * [A Note on the Examples in this Document](#a-note-on-the-examples-in-this-document)
   * [Errors](#errors)
@@ -46,7 +44,7 @@
         * [`range`](#range)
       - [Custom Types](#custom-types)
   * [`post`](#post)
-    + [Example](#example-2)
+    + [Example](#example-1)
     + [Options with Post Validators](#options-with-post-validators)
     + [Multiple Post Validators](#multiple-post-validators)
   * [`pre`](#pre)
@@ -58,6 +56,8 @@
     + [Numbers](#numbers)
     + [Booleans](#booleans)
     + [Dates](#dates)
+- [As Connect or Express Middleware](#as-connect-or-express-middleware)
+  * [Example](#example-2)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -102,40 +102,7 @@ try {
 }
 ````
 
-## As Connect or Express Middleware
-
-Connect and Express middleware is build in.
-
-Usage: `isvalid.validate.body(schema)` validates `req.body`.
-Usage: `isvalid.validate.query(schema)` validates `req.query`.
-Usage: `isvalid.validate.param(schema)` validates `req.param`.
-Usage: `isvalid.validate.parameter(id, schema)` validates `req.param` as a route.
-
-### Example
-
-````javascript
-var { validate } = require('isvalid');
-
-app.param('myparam', validate.param(Number)); // Validates parameter through param
-
-app.post('/mypath/:myparam',
-	validate.parameter('myparam', Number), // Validates parameter through route.
-	validate.query({
-		'filter': String
-	}),
-	validate.body({
-		'mykey': { type: String, required: true }
-	}),
-	function(req, res) {
-		// req.param.myparam, req.body and req.query are now validated.
-		// - any default values - or type conversion - has been applied.
-	}
-);
-````
-
-> Remark: If validation fails `isvalid` will unset the validated content (`req.body` will become `undefined`). This is to ensure that routes does not get called with invalid data, in case a validation error isn't correctly handled.
-
-On contrary – `req.body` will be set with the validated data if validation succeeds.
+> There is also build-in support for usage as an [express](https://npmjs.org/package/express) or [connect](https://npmjs.org/package/connect) middleware – see the - [As Connect or Express Middleware](#as-connect-or-express-middleware) section below for more information.
 
 # How it Works
 
@@ -772,6 +739,41 @@ Likewise will schemas of type `Boolean` will be automatically converted into a `
 If the schema is of type `Date` and the input is a `String` containing an [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) formatted date, it will automatically be parsed and converted into a `Date`.
 
 ISO-8601 is the date format that `JSON.stringify(...)` convert `Date` instances into, so this allows you to just serialize an object to JSON on - as an example - the client side, and then **isvalid** will automatically convert that into a `Date` instance when validating on the server side.
+
+# As Connect or Express Middleware
+
+Connect and Express middleware is build in.
+
+Usage: `isvalid.validate.body(schema)` validates `req.body`.
+Usage: `isvalid.validate.query(schema)` validates `req.query`.
+Usage: `isvalid.validate.param(schema)` validates `req.param`.
+Usage: `isvalid.validate.parameter(id, schema)` validates `req.param` as a route.
+
+## Example
+
+````javascript
+const { validate } = require('isvalid');
+
+app.param('myparam', validate.param(Number)); // Validates parameter through param
+
+app.post('/mypath/:myparam',
+	validate.parameter('myparam', Number), // Validates parameter through route.
+	validate.query({
+		'filter': String
+	}),
+	validate.body({
+		'mykey': { type: String, required: true }
+	}),
+	function(req, res) {
+		// req.param.myparam, req.body and req.query are now validated.
+		// - any default values - or type conversion - has been applied.
+	}
+);
+````
+
+> Remark: If validation fails `isvalid` will unset the validated content (`req.body` will become `undefined`). This is to ensure that routes does not get called with invalid data, in case a validation error isn't correctly handled.
+
+On contrary – `req.body` will be set with the validated data if validation succeeds.
 
 # Contributing
 
