@@ -633,12 +633,12 @@ describe('validate', function() {
 		});
 		describe('enum', function() {
 			it('should come back with an error if string is not in enum.', () => {
-				return expect(isvalid('123', { type: 'string', enum: ['this','is','a','test'] }))
+				return expect(isvalid('123', { type: 'string', enum: ['this','test'] }))
 					.to.eventually.be.rejectedWith(ValidationError)
 					.and.have.property('validator', 'enum');
 			});
 			it('should come back with no error if string is in enum.', () => {
-				return expect(isvalid('test', { type: 'string', enum: ['this','is','a','test'] }))
+				return expect(isvalid('test', { type: 'string', enum: ['this','test'] }))
 					.to.eventually.be.a('String').equal('test');
 			});
 			describe('#errors', function() {

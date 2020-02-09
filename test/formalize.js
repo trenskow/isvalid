@@ -30,6 +30,16 @@ describe('schema', function() {
 		it('should throw error if type is String and enum is not array of strings.', () => {
 			return expect(formalize({ type: String, enum: ['this','is',1,'test'] })).to.eventually.be.rejectedWith(SchemaError);
 		});
+		it('should come back with enum intact', () => {
+			return expect(formalize({ type: String, enum: ['this', 'test']}))
+				.to.eventually.have.property('enum')
+				.to.have.property(1, 'test');
+		});
+		it('should come back with enum intact (custom error message)', () => {
+			return expect(formalize({ type: String, enum: [['this', 'test'], 'Must be this or test.'] }))
+				.to.eventually.have.property('errors')
+				.to.have.property('enum', 'Must be this or test.');
+		});
 		it('should throw an error if schema type cannot be determined.', () => {
 			return expect(formalize({ type: '' })).to.eventually.be.rejectedWith(SchemaError);
 		});
