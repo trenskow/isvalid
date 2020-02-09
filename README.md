@@ -48,7 +48,7 @@
     + [Options with Post Validators](#options-with-post-validators)
     + [Multiple Post Validators](#multiple-post-validators)
   * [`pre`](#pre)
-  * [Object and Array Shortcuts](#object-and-array-shortcuts)
+  * [Type Shortcuts](#type-shortcuts)
     + [Object Shortcuts](#object-shortcuts)
     + [Array Shortcuts](#array-shortcuts)
     + [Other Shortcuts](#other-shortcuts)
@@ -110,7 +110,7 @@ try {
 
 ## A Note on the Examples in this Document
 
-In order to be a complete schema, schemas must have at least the `type`, `post`/`pre` or `equals` validator. But, as you will notice throughout this document, many of the examples have any of them. Instead they just use the type shortcuts.
+In order to be a complete schema, schemas must have at least the `type`, `post`/`pre` or `equals` validator. But, as you will notice throughout this document, many of the examples have none of them. Instead they just use the type shortcuts.
 
 This is because **isvalid** supports type shortcuts for all its supported types, and you are - if you want to help yourself - going to use them a lot. You can read more about [type shortcuts](#type-shortcuts) in the designated section at the near-bottom of this document.
 
@@ -636,7 +636,7 @@ If, though, any of the post validator functions throws an error, none of the res
 
 `pre` does the exact same thing as `post` described above, except it is called before any other validators are validated. This gives you a chance to transform the data and return it before actual validation.
 
-## Object and Array Shortcuts
+## Type Shortcuts
 
 Some types can be specified using shortcuts. Instead of specifying the type, you simply just use the type. This works with `Object` and `Array` types.
 
