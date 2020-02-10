@@ -557,7 +557,7 @@ describe('validate', function() {
 						}
 					})).to.eventually.be.an('array').and.to.have.property(0).and.to.have.property('test', true);
 				});
-				it('should come back with type error if autowrap and not matching subschema.', () => {
+				it('should come back with type error if autowrap and not matching sub-schema.', () => {
 					return expect(isvalid({
 						test: 'Not a boolean'
 					}, {
@@ -568,7 +568,7 @@ describe('validate', function() {
 						}
 					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'type');
 				});
-				it('should come back with type error if no autowrap and matching subschema.', () => {
+				it('should come back with type error if no autowrap and matching sub-schema.', () => {
 					return expect(isvalid({
 						test: true
 					}, [{

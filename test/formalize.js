@@ -24,7 +24,7 @@ describe('schema', function() {
 		it('should throw error if type is String and enum is not an array.', () => {
 			return expect(formalize({ type: String, enum: 1 })).to.eventually.be.rejectedWith(SchemaError);
 		});
-		it('should throw error if type is String and enum has zero valus.', async() => {
+		it('should throw error if type is String and enum has zero values.', async() => {
 			return expect(formalize({ type: String, enum: [] })).to.eventually.be.rejectedWith(SchemaError);
 		});
 		it('should throw error if type is String and enum is not array of strings.', () => {
@@ -81,12 +81,12 @@ describe('schema', function() {
 		it('should come back with a Date shortcut expanded.', () => {
 			return expect(formalize(Date)).to.eventually.have.property('type').equal(Date);
 		});
-		it('should come back with required set to true if object has not specified required and a nested subschema is required.', () => {
+		it('should come back with required set to true if object has not specified required and a nested sub-schema is required.', () => {
 			return expect(formalize({
 				'a': { type: String, required: true }
 			})).to.eventually.have.property('required').to.be.equal(true);
 		});
-		it('should come back with required set to true if any deep subschema is required.', () => {
+		it('should come back with required set to true if any deep sub-schema is required.', () => {
 			return expect(formalize({
 				'a': {
 					'b': {
@@ -100,7 +100,7 @@ describe('schema', function() {
 				'a': { type: String, required: true }
 			})).to.eventually.have.property('required').to.be.equal(true);
 		});
-		it('should come back with required set to false if root object required is false and deep subschema is required.', () => {
+		it('should come back with required set to false if root object required is false and deep sub-schema is required.', () => {
 			return expect(formalize({
 				type: Object,
 				required: false,
@@ -115,12 +115,12 @@ describe('schema', function() {
 				}
 			})).to.eventually.have.property('required').to.be.equal(false);
 		});
-		it('should come back with required set to true if array has deep nested required subschema.', () => {
+		it('should come back with required set to true if array has deep nested required sub-schema.', () => {
 			return expect(formalize([
 				{ type: String, required: true }
 			])).to.eventually.have.property('required').to.be.equal(true);
 		});
-		it('should come back with required set to false if array is non-required but has deep nested required subschema.', () => {
+		it('should come back with required set to false if array is non-required but has deep nested required sub-schema.', () => {
 			return expect(formalize({
 				type: Array,
 				required: false,

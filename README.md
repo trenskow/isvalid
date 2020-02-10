@@ -3,7 +3,7 @@
 [![npm version](https://badge.fury.io/js/isvalid.svg)](https://www.npmjs.com/package/isvalid) [![travis ci](https://travis-ci.org/trenskow/isvalid.svg?branch=master)](https://travis-ci.org/trenskow/isvalid) [![Join the chat at https://gitter.im/trenskow/isvalid](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/trenskow/isvalid?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 -
 
-**isvalid** is an asynchronous node.js library for validating and error correcting JavaScript data - which also includes JSON. It uses a very simple schema model - inspired by the [Mongoose](https://npmjs.org/package/mongoose).
+**isvalid** is an asynchronous node.js library for validating and error correcting JavaScript data - which also includes JSON. It uses a very simple schema model - inspired by [Mongoose](https://npmjs.org/package/mongoose).
 
 # Table of Content
 
@@ -65,7 +65,11 @@
 
 **isvalid** uses a simple schema modal to specify how the data should be formatted. It supports generic validators for all types and type specific validators.
 
-Usage: `isvalid(dataToValidate, validationSchema, callback)`
+Usage:
+
+````javascript
+await isvalid(dataToValidate, validationSchema, callback)
+````
 
 ## Example
 
@@ -89,28 +93,29 @@ isvalid(inputData, {
 ````javascript
 const isvalid = require('isvalid');
 
+let data = /* some data */
+
 try {
-	let data = await isvalid(inputData, {
+	data = await isvalid(data, {
 		'user': { type: String, required: true },
 		'pass': { type: String, required: true }
 	};
 	
-	// Data is validated.
-
 } catch(err) {
 	// A validation error occurred.
 }
+
+// data is validated.
+
 ````
 
 > There is also build-in support for usage as an [express](https://npmjs.org/package/express) or [connect](https://npmjs.org/package/connect) middleware – see the [As Connect or Express Middleware](#as-connect-or-express-middleware) section below for more information.
 
 # How it Works
 
-**isvalid** is a comprehensive validation library - build for ease of use. Both as Connect or Express middleware - where it comes in really handy - or as stand alone.
-
 ## A Note on the Examples in this Document
 
-In order to be a complete schema, schemas must have at least the `type`, `post`/`pre` or `equals` validator. But, as you will notice throughout this document, many of the examples have none of them. Instead they just use the type shortcuts.
+In order to be a complete schema, schemas must have at least the `type`, `post`/`pre` or `equal` validator. But, as you will notice throughout this document, many of the examples have none of them. Instead they just use type shortcuts.
 
 This is because **isvalid** supports type shortcuts for all its supported types, and you are - if you want to help yourself - going to use them a lot. You can read more about [type shortcuts](#type-shortcuts) in the designated section at the near-bottom of this document.
 
@@ -124,15 +129,15 @@ All errors are thrown (in promises).
 
 ### SchemaError
 
-The `SchemaError` contains the `schema` property which contains the actual schema in which there is an error. It also has the `message` property with the description of the schema error.
+The `SchemaError` contains a `schema` property which is the actual schema in which there is an error. It also has a `message` property with the description of the error that occurred.
 
 ### ValidationError
 
 The `ValidationError` contains three properties besides the `message`.
 
-	- `keyPath` is an array indicating the key path in the data where the error occurred.
-	- `schema` is the schema that failed to validate.
-	- `validator` is the name of the validator that failed.
+- `keyPath` is an array indicating the key path in the data where the error occurred.
+- `schema` is the schema that failed to validate.
+- `validator` is the name of the validator that failed.
 
 ## Supported Types
 
@@ -154,7 +159,7 @@ You specify the type like this:
 { type: String }
 ````
 
-or if `type` is your only validator, you can also do this:
+or if `type` is your only validator, you can just do this:
 
 ````javascript
 String
@@ -164,12 +169,14 @@ In the above example the input must be of type `String`.
 
 All schemas must have at least a `type`, `post`/`pre` or `equal` validator.
 
+> There is more information about shortcuts in the [Type Shortcuts](#type-shortcuts) section below.
+
 ### Validators Available to All Types
 
 These validators are supported by all types.
 
 #### `default`
-Defaults data to specific value if data is not present in input. It takes a specific value or it can call a function to retrieve the value.
+Defaults data to a specific value if data is not present in the input. It takes a specific value or it can call a function to retrieve the value.
 
 Type: Any value or a function.
 
@@ -183,7 +190,7 @@ Example:
 }
 ````
 
-This tells the validator, that an `email` key is expected, and if it is not found, it should just assign it with whatever is specified as `default`.
+This tells the validator, that an `email` key is expected, and if it is not found, it should just assign it with (in this case) `email@not.set`.
 
 This works with all supported types - below with a boolean type:
 
@@ -202,9 +209,9 @@ An asynchronous default function works using promises.
 ````javascript
 {
 	"created": {
-		type: String,
+		type: Date,
 		default: async function() {
-			return 'This is my default value';
+			return new Date();
 		}
 	}
 }
@@ -217,9 +224,9 @@ A synchronous default function works the same way.
 ````javascript
 {
 	"created": {
-		type: String,
+		type: Date,
 		default: function() {
-			return 'This is my default value';
+			return new Date();
 		}
 	}
 }
@@ -228,7 +235,7 @@ A synchronous default function works the same way.
 #### `required`
 Values: `true`, `false` or `'implicit'`.
 
-`required` works a little like default. Except if the value is absent a validation error is thrown.
+`required` works a little like default. Except if the value is absent a `ValidationError` is thrown.
 
 ````javascript
 { type: String, required: true }
@@ -268,20 +275,22 @@ See the example below.
 }
 ````
 
-In the above example the data will validate if the object is not present the input, even though `user` is required - because the parent object is explicitly *not* required. If the object - on the other hand - *is* present it must have the `user` key and it must be of type `String`.
+In the above example the data will validate if the object is not present in the input, even though `user` is required - because the parent object is explicitly *not* required. If the object - on the other hand - *is* present, it must have the `user` key and it must be of type `String`.
 
-> *Remark:* If `required` is not specified, then `Object` and `Array` types are by default `'implicit'`. All other types are by default non-required. Also `required` is ignored if `default` is specified.
+> If `required` is not specified, then `Object` and `Array` types are by default `'implicit'`. All other types are by default non-required. Also `required` is ignored if `default` is specified.
 
 #### `allowNull`
 Type: `Boolean`
 
 This validator allows for `null`-values to pass through - even if the input is required.
 
-	{ type: String, required: true, allowNull: true }
+````javascript
+{ type: String, required: true, allowNull: true }
+````
 
-In the above example input must be of type `String`, it is required, but `null` is allowed.
+In the above example input must be of type `String`, it is required, but a value of `null` is allowed.
 
-> *Remark:* By default `null` is `false`.
+> By default `allowNull` is set to `false`.
 
 #### `equal`
 Type: Any
@@ -296,7 +305,7 @@ This works with any type (also `Object` and `Array`) and a deep comparison is pe
 
 Type: `Object`
 
-`errors` are really not a validator - it allows you to customize the errors emitted by the validators. All validators have default error messages, but these can be customized in order to make user and context friendly error messages.
+`errors` are really not a validator - it allows you to customize the errors emitted by the validators. All validators have default error messages, but these can be customized in order to make them more user and context friendly.
 
 An example below.
 
@@ -339,7 +348,7 @@ It might be a more convenient way, and it maps the errors to the same line as th
 
 ##### `schema`
 
-The `schema` validator of `Object` and `Array` types specifies the schema of their children. Objects have keys and values - arrays only have a single schema.
+The `schema` validator of `Object` and `Array` types specifies the schema of their children. Objects have keys and schemas - arrays only have a single schema.
 
 An example below of an object schema with a `user` key.
 
@@ -352,7 +361,7 @@ An example below of an object schema with a `user` key.
 }
 ````
 
- And an example below of an array of strings.
+And an example below of an array of strings.
 
 ````javascript
 {
@@ -361,7 +370,7 @@ An example below of an object schema with a `user` key.
 }
 ````
 
-There is also a shortcut version of describing objects and arrays. You can read more about that below in the [Object and Array Shortcuts](#object-and-array-shortcuts) section.
+There is also a shortcut version of describing objects and arrays. You can read more about that below in the [Type Shortcuts](#type-shortcuts) section.
 
 #### `Object` Validators
 
@@ -375,29 +384,8 @@ This validator is used to control how unknown keys in objects are handled.
 The validator has three options:
 
 * `allow` Pass any unknown key onto the validated object.
-* `deny` Throw an validation error if object has unknown key.
+* `deny` Throw a `ValidationError` if object has unknown key.
 * `remove` Remove the unknown key from the validated object.
-
-An example below.
-
-````javascript
-{
-	type: Object,
-	unknownKeys: 'remove',
-	schema: {
-		awesome: Boolean
-	}
-}
-````
-
-In the above example, if you validated the following object, the `why` key would be absent from the validated data.
-
-````javascript
-{
-	awesome: true,
-	why: 'It is!'
-}
-````
 
 > Default is `deny`.
 
@@ -410,7 +398,7 @@ Type: `Number` or `String`
 
 This ensures that an array has a specific length. This can be either a number or a range. The validator throws an error if the array length is outside the bounds of the specified range(s).
 
-An array that should have exactly 2 items:
+Examples:
 
 ````javascript
 {
@@ -420,7 +408,7 @@ An array that should have exactly 2 items:
 }
 ````
 
-An array that should have at least 2 items:
+> An array that should have exactly 2 items.
 
 ````javascript
 {
@@ -430,7 +418,7 @@ An array that should have at least 2 items:
 }
 ````
 
-An array that should have a maximum of 2 items:
+> An array that should have at least 2 items.
 
 ````javascript
 {
@@ -440,7 +428,7 @@ An array that should have a maximum of 2 items:
 }
 ````
 
-An array that should have at least 2 items and a maximum of 5 items:
+> An array that should have a maximum of 2 items.
 
 ````javascript
 {
@@ -450,7 +438,7 @@ An array that should have at least 2 items and a maximum of 5 items:
 }
 ````
 
-An array that should have at two or less items, exactly 5 items or 8 or more items:
+> An array that should have at least 2 items and a maximum of 5 items.
 
 ````javascript
 {
@@ -459,6 +447,8 @@ An array that should have at two or less items, exactly 5 items or 8 or more ite
 	schema: { … }
 }
 ````
+
+> An array that should have at least 2 items, exactly 5 items or 8 or more items.
 
 ##### `unique`
 Type: `Boolean`
@@ -492,7 +482,7 @@ Example:
 }
 ````
 
-If `autowrap` is set to `true` and autowrap fails (the sub-schema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error.
+If `autowrap` is set to `true` and auto-wrap fails (the sub-schema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error.
 
 > Default is `false`.
 
@@ -515,20 +505,20 @@ Type: `RegExp`
 
 This ensures that a string can be matched against a regular expression. The validator throws an error if the string does not match the pattern.
 
-This example shows a string that must contain a string of at least one character of latin letters or decimal numbers:
+This example shows a string that must contain a string of at least one character of ASCII letters or decimal numbers:
 
 ````javascript
 { type: String, match: /^[a-zA-Z0-9]+$/ }
-`````
+````
 
 ##### `enum`
 Type: `Array`
 
-This is complimentary to `match` - as this could easily be achieved with `match` - but it is simpler and easier to read. The validator ensures that the string can be matched against a set of values. If it does not, it sends an error to the callback.
+This is complimentary to `match` - as this could also easily be achieved with `match` - but it's simpler and easier to read. The validator ensures that the string can be matched against a set of values. If it does not, it throws a throws a `ValidationError`.
 
 ````javascript
 { type: String, enum: ['none','some','all'] }
-`````
+````
 
 In the above example the string can only have the values of `none`, `some` or `all`.
 
@@ -537,6 +527,8 @@ In the above example the string can only have the values of `none`, `some` or `a
 #### `Number` Validators
 
 The `Number` type has only one specific validator - besides the common validators.
+
+> `Number` also does automatic type conversion from `String` to `Number` where possible. You can read more about that and other automatic type conversions in the [Automatic Type Conversion](#automatic-type-conversion) section below
 
 ##### `range`
 Type: `Number`or `String`
@@ -569,19 +561,18 @@ An example is below, where `User` is a custom class.
 {
 	type: Object,
 	schema: {
-		'low': Number,
-		'high': Number
+		'password': { type: String, required: true },
+		'passwordRepeat': String
 	}
 	'post': async (data, schema) => {
-		if (data.low > data.high) {
-			throw new Error('low must be lower than high');
+		if (data.password !== data.passwordRepeat) {
+			throw new Error('Passwords must match.');
 		}
-		return data;
 	}
 }
 ````
 
-In the above example we have specified an object with two keys - `low` and `high`. The validator will first make sure, that the object validates to the schema. If it does it will then call the post validator - which in this example throws an error if low is bigger than high.
+In the above example we have specified an object with two keys - `password` and `passwordRepeat`. The validator first makes sure, that the object validates to the schema. If it does it will then call the post validator - which in this example throws an error if passwords do no match.
 
 > * `post` functions works both by returning promises (async functions) and returning a value.
 
@@ -611,7 +602,7 @@ An example below.
 
 ### Multiple Post Validators
 
-The `post` validator also support an array of validators. Instead of providing a function, provide an array of functions. Synchronous and asynchronous functions can be mixed and matched as necessary.
+The `post` validator also support an array of functions. Instead of providing just one function, you can provide an array of functions. Synchronous and asynchronous functions can be mixed and matched as necessary.
 
 An example.
 
@@ -628,13 +619,13 @@ An example.
 }
 ````
 
-If, though, any of the post validator functions throws an error, none of the rest of the post validators in the post validator chain will get called, and *isvalid* will throw the error as a `ValidationError`.
+If, though, any of the post validator functions throws an error, none of the rest of the post validators in the chain will get called, and *isvalid* will throw the error as a `ValidationError`.
 
 > The post validator functions are called in order.
 
 ## `pre`
 
-`pre` does the exact same thing as `post` described above, except it is called before any other validators are validated. This gives you a chance to transform the data and return it before actual validation.
+`pre` does the exact same thing as `post` described above, except it is called before any other validators are validated. This gives you a chance to transform the data and return it before the actual validation.
 
 ## Type Shortcuts
 
@@ -667,7 +658,7 @@ Object shortcuts are used like this:
 }
 ````
 
-and is in fact the same as this:
+and is the same as this:
 
 ````javascript
 {
@@ -680,7 +671,7 @@ and is in fact the same as this:
 
 Which means that data should be an object with a `user` key of the type `String`.
 
-> *Remark:* Internally the library tests for object shortcuts by examining the absent of the `type`, `post`/`pre` or `equal` validators. So if you need objects schemas with validators for keys with those names, you must explicitly format the object using `type` and `schema` - hence the shortcut cannot be used.
+> Internally the library tests for object shortcuts by examining the absent of the `type`, `post`/`pre` or `equal` validators. So if you need objects schemas with validators for keys with those names, you must explicitly format the object using `type` and `schema` - hence the shortcut cannot be used.
 
 ### Array Shortcuts
 
@@ -703,7 +694,7 @@ Which means the data must be an array of strings.
 
 ### Other Shortcuts
 
-The others are a bit different. They are - in essence - a shortcut for the validator `type`. Instead of writing `type` you just specify the type directly. Available types are all the supported types of isvalid, namely `Object`, `Array`, `String`, `Number`, `Boolean`, `Date` and custom types.
+The others are a bit different. They are - in essence - a shortcut for the validator `type`. Instead of writing `type` you just specify the type directly. Available types are all the supported types of **isvalid**, namely `Object`, `Array`, `String`, `Number`, `Boolean`, `Date` and custom types.
 
 An example below.
 
@@ -738,16 +729,18 @@ Likewise will schemas of type `Boolean` will be automatically converted into a `
 
 If the schema is of type `Date` and the input is a `String` containing an [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) formatted date, it will automatically be parsed and converted into a `Date`.
 
-ISO-8601 is the date format that `JSON.stringify(...)` convert `Date` instances into, so this allows you to just serialize an object to JSON on - as an example - the client side, and then **isvalid** will automatically convert that into a `Date` instance when validating on the server side.
+ISO-8601 is the date format that `JSON.stringify(...)` converts `Date` instances into, so this allows you to just serialize an object to JSON on - as an example - the client side, and then **isvalid** will automatically convert that into a `Date` instance when validating on the server side.
 
 # As Connect or Express Middleware
 
 Connect and Express middleware is build in.
 
-Usage: `isvalid.validate.body(schema)` validates `req.body`.
-Usage: `isvalid.validate.query(schema)` validates `req.query`.
-Usage: `isvalid.validate.param(schema)` validates `req.param`.
-Usage: `isvalid.validate.parameter(id, schema)` validates `req.param` as a route.
+Usage:
+
+* `isvalid.validate.body(schema)` validates `req.body`.
+* `isvalid.validate.query(schema)` validates `req.query`.
+* `isvalid.validate.param(schema)` validates `req.param`.
+* `isvalid.validate.parameter(id, schema)` validates `req.param` as a route.
 
 ## Example
 
@@ -771,9 +764,7 @@ app.post('/mypath/:myparam',
 );
 ````
 
-> Remark: If validation fails `isvalid` will unset the validated content (`req.body` will become `undefined`). This is to ensure that routes does not get called with invalid data, in case a validation error isn't correctly handled.
-
-On contrary – `req.body` will be set with the validated data if validation succeeds.
+> If validation fails, `isvalid` will unset the validated content (`req.body` will become `undefined`). This is to ensure that routes does not get called with invalid data, in case a validation error isn't correctly handled. On the opposite, `req.body` will be set with the validated data (with transforms and automatic type conversion) if validation succeeds.
 
 # Contributing
 

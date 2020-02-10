@@ -5,10 +5,10 @@ const expect = require('chai').expect,
 	unique = require('../lib/unique.js');
 
 describe('unique', function() {
-	it('shold return false if array of objects is not unique.', () => {
+	it('should return false if array of objects is not unique.', () => {
 		return expect(unique([{test:{ing:123}},{test:{ing:123}}])).to.eventually.be.false;
 	});
-	it('shold return true if array of objects is unique.', () => {
+	it('should return true if array of objects is unique.', () => {
 		return expect(unique([{test:{ing:123}},{test:{ing:456}}])).to.eventually.be.true;
 	});
 });
