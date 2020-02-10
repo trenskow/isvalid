@@ -1,6 +1,6 @@
 # History
 
-NOTICE: If your version number is not explicitly specified, it was a bug fixing update.
+NOTICE: If your version number is not explicitly specified, it contains bug fixes or changes to internal workings.
 
 ## Version 2.7.0
 
