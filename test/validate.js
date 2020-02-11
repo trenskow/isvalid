@@ -444,6 +444,30 @@ describe('validate', function() {
 					}
 				})).to.eventually.not.have.property('why');
 			});
+			describe('required', function() {
+				it ('should come back with object key path when implicit and no `throwDeepKeyOnImplicit`.', () => {
+					return expect(isvalid({}, {
+						'myObject': {
+							'myKey': {
+								type: String,
+								required: true
+							}
+						}
+					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('keyPath').to.have.members(['myObject']);
+				});
+				it ('should come back with object key path when implicit and `throwDeepKeyOnImplicit` is `true`.', () => {
+					return expect(isvalid({}, {
+						'myObject': {
+							'myKey': {
+								type: String,
+								required: true
+							}
+						}
+					}, {
+						throwDeepKeyOnImplicit: true
+					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('keyPath').to.have.members(['myObject', 'myKey']);
+				});
+			});
 			describe('#errors', function() {
 				it('should come back with error of post message if there are unknown keys and unknownKeys is set to \'deny\'.', () => {
 					return expect(isvalid({
@@ -460,7 +484,7 @@ describe('validate', function() {
 						}
 					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'Not allowed.');
 				});
-			});
+			})
 		});
 	});
 	describe('array validator', function() {
