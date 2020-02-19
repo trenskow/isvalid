@@ -99,7 +99,7 @@ try {
 	data = await isvalid(data, {
 		'user': { type: String, required: true },
 		'pass': { type: String, required: true }
-	};
+	});
 	
 } catch(err) {
 	// A validation error occurred.
