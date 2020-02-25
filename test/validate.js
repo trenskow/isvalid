@@ -484,7 +484,7 @@ describe('validate', function() {
 						}
 					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'Not allowed.');
 				});
-			})
+			});
 		});
 	});
 	describe('array validator', function() {
@@ -505,6 +505,16 @@ describe('validate', function() {
 		});
 		it('should come back with no error and an empty array when supplying empty array.', () => {
 			return expect(isvalid([], [{}])).to.eventually.have.length(0);
+		});
+		describe('#errors', function() {
+			it ('should come back with error and index of key path properly set.', () => {
+				return expect(isvalid([1], {
+					type: Array,
+					schema: {
+						type: String,
+					}
+				}, { keyPath: 'root'})).to.eventually.be.rejectedWith(ValidationError).and.have.property('keyPath').eql(['root', 0]);
+			});
 		});
 		describe('len', function() {
 			it('should come back with same input as output if within ranges of len.', () => {
