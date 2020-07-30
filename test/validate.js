@@ -317,8 +317,11 @@ describe('validate', function() {
 		it('should convert string values into numbers if string contains a negative number.', () => {
 			return expect(isvalid('-123.987', Number)).to.eventually.equal(-123.987);
 		});
-		it('should convert string values into numbers if string contains a E notation.', () => {
+		it('should convert string values into numbers if string contains a negative E notation.', () => {
 			return expect(isvalid('5.8e-7', Number)).to.eventually.equal(5.8e-7);
+		});
+		it('should convert string values into numbers if string contains a positive E notation.', () => {
+			return expect(isvalid('5.8e+7', Number)).to.eventually.equal(5.8e+7);
 		});
 		it('should come back with error if string is supplied - but not a number.', () => {
 			return expect(isvalid('abc', Number))
