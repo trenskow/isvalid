@@ -163,11 +163,6 @@ describe('schema', function() {
 			expect(s).to.have.property('errors').to.have.property('type').equal('Boolean.');
 			expect(s).to.have.property('errors').to.have.property('required').equal('Required.');
 		});
-		it ('should throw an error if an custom error message is a garbage value.', () => {
-			expect(f({ type: String, errors: { type: { 'key': 'some garbage value.' } } }))
-				.to.throw(SchemaError)
-				.to.have.property('message', 'Custom error message for validator \'type\' must be of type `String`.');
-		});
 		it('should come back with equal formalized.', () => {
 			expect(formalize({
 				equal: '123'
