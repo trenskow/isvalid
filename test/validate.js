@@ -198,7 +198,7 @@ const commonTests = {
 			});
 			it('should pass on post schema options if specified.', () => {
 				return expect(isvalid({}, {
-					post: function(obj, schema, options) {
+					post: function(obj, schema, { options }) {
 						expect(options).to.have.property('test').to.be.equal(true);
 					}
 				}, {
@@ -280,8 +280,8 @@ const commonTests = {
 					'awesome': { type: Boolean, priority: 1, default: true },
 					'why': {
 						'reason': { type: 'string', default: 'It just is!' },
-						'who': { type: 'string', post: (data, schema, options, validatedData) => {
-							expect(validatedData.awesome).to.be.true;
+						'who': { type: 'string', post: (_, schema, { data }) => {
+							expect(data.awesome).to.be.true;
 							return 'isvalid';
 						} }
 					}

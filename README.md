@@ -551,9 +551,9 @@ An example is below, where `User` is a custom class.
 
 ## `post`
 
-`post` are for usage when the possibilities of the validation schema falls short. `post` basically outsources validation to a post function.
+`post` can be used when the possibilities of the validation schema falls short. `post` basically outsources validation to a functions.
 
-> The `type` validator becomes optional when using `post`. You can completely leave out any validation and just use a `post` validator.
+> The `type` validator becomes optional when using `post`. You can completely leave out any validation and just use a `post` (or `pre`) validator.
 
 ### Example
 
@@ -563,7 +563,7 @@ An example is below, where `User` is a custom class.
 	schema: {
 		'password': { type: String, required: true },
 		'passwordRepeat': String
-	}
+	},
 	'post': async (data, schema) => {
 		if (data.password !== data.passwordRepeat) {
 			throw new Error('Passwords must match.');
@@ -592,7 +592,7 @@ An example below.
 		options: {
 			myCustomOptions: 'here'
 		},
-		post: function(data, schema, fn) {
+		post: function(data, schema) {
 			// schema.options will now contain whatever options you supplied in the schema.
 			// In this example schema.options is { myCustomOptions: 'here'}.
 		}
@@ -609,10 +609,10 @@ An example.
 ````javascript
 {
 	post: [
-		function(data, schema, fn) {
+		function(data, schema) {
 			data(null, myValidatedData);
 		},
-		function(data, schema) {
+		async function(data, schema) {
 			return mySecondValidatedData
 		}
 	]
@@ -621,7 +621,7 @@ An example.
 
 If, though, any of the post validator functions throws an error, none of the rest of the post validators in the chain will get called, and *isvalid* will throw the error as a `ValidationError`.
 
-> The post validator functions are called in order.
+> The `post` validator functions are called in order.
 
 ## `pre`
 
@@ -658,7 +658,7 @@ Object shortcuts are used like this:
 }
 ````
 
-and is the same as this:
+and is the same as
 
 ````javascript
 {
@@ -681,7 +681,16 @@ The same goes for arrays:
 [String]
 ````
 
-is essentially the same as:
+is the same as
+
+````javascript
+{
+  type: Array,
+  schema: String
+}
+````
+
+and is the same as
 
 ````javascript
 {
@@ -729,7 +738,7 @@ Likewise will schemas of type `Boolean` will be automatically converted into a `
 
 If the schema is of type `Date` and the input is a `String` containing an [ISO-8601](http://en.wikipedia.org/wiki/ISO_8601) formatted date, it will automatically be parsed and converted into a `Date`.
 
-ISO-8601 is the date format that `JSON.stringify(...)` converts `Date` instances into, so this allows you to just serialize an object to JSON on - as an example - the client side, and then **isvalid** will automatically convert that into a `Date` instance when validating on the server side.
+ISO-8601 is the date format that `JSON.stringify(...)` converts `Date` instances into, so this allows you to just serialize to JSON on - as an example - the client side, and then **isvalid** will automatically convert that into a `Date` instance when validating on the server side.
 
 # As Connect or Express Middleware
 

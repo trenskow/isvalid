@@ -15,14 +15,14 @@ app.param('testParam', validate.param({
 }));
 
 app.param('cbTestParam', validate.param({
-	type: String, 
+	type: String,
 	required: true,
-	post: (data, schema, options) => {
+	post: (data, schema, { options }) => {
 		options.res.sendStatus(201);
 	}
 }));
 
-app.get('/parameter/:testParam', 
+app.get('/parameter/:testParam',
 	validate.parameter('testParam', {
 		type: Number,
 		post: (data) => data + 1
@@ -61,7 +61,7 @@ app.use(function(req, res) {
 });
 
 // Error handler
-app.use(function(err, req, res, next_ignoreUnused) {
+app.use(function(err, req, res, _) {
 	if (err.constructor.name == 'ValidationError') {
 		return res.status(400).json({error: 'validation-error', keyPath: err.keyPath.join('.'), message: err.message});
 	}
