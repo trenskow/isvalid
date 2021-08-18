@@ -2,7 +2,7 @@
 
 const expect = require('chai').expect,
 	formalize = require('../lib/formalize.js'),
-	SchemaError = require('../lib/errors/SchemaError.js');
+	SchemaError = require('../lib/errors/schema.js');
 
 const f = (...args) => {
 	return () => {

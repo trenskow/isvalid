@@ -4,7 +4,7 @@
 const chai = require('chai'),
 	expect = chai.expect,
 	assert = chai.assert,
-	ValidationError = require('../lib/errors/ValidationError.js'),
+	ValidationError = require('../lib/errors/validation.js'),
 	isvalid = require('../'),
 	utils = require('../lib/utils.js');
 
