@@ -12,3 +12,4 @@ require('./unique.js');
 require('./formalize.js');
 require('./validate.js');
 require('./middleware/');
+require('./merge');
