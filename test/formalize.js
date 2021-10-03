@@ -83,24 +83,24 @@ describe('schema', function() {
 		it('should come back with a Date shortcut expanded.', () => {
 			expect(formalize(Date)).to.have.property('type').equal(Date);
 		});
-		it('should come back with required set to true if object has not specified required and a nested sub-schema is required.', () => {
+		it('should come back with required set to `implicit` if object has not specified required and a nested sub-schema is required.', () => {
 			expect(formalize({
 				'a': { type: String, required: true }
-			})).to.have.property('required').to.be.equal(true);
+			})).to.have.property('required').to.be.equal('implicit');
 		});
-		it('should come back with required set to true if any deep sub-schema is required.', () => {
+		it('should come back with required set to `implicit` if any deep sub-schema is required.', () => {
 			expect(formalize({
 				'a': {
 					'b': {
 						'c': { type: String, required: true }
 					}
 				}
-			})).to.have.property('required').to.be.equal(true);
+			})).to.have.property('required').to.be.equal('implicit');
 		});
-		it('should come back with required set to true if root object has required in sub-schema.', () => {
+		it('should come back with required set to `implicit` if root object has required in sub-schema.', () => {
 			expect(formalize({
 				'a': { type: String, required: true }
-			})).to.have.property('required').to.be.equal(true);
+			})).to.have.property('required').to.be.equal('implicit');
 		});
 		it('should come back with required set to false if root object required is false and deep sub-schema is required.', () => {
 			expect(formalize({

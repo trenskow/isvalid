@@ -5,14 +5,14 @@ const expect = require('chai').expect,
 
 describe('merge', () => {
 	it ('should come back with destination type.', () => {
-		expect(merge({ type: String }, { type: Date })).to.have.property('type').equal(Date);
+		expect(merge({ type: String }).with({ type: Date })).to.have.property('type').equal(Date);
 	});
 	it ('should come back with merged validators', () => {
-		expect(merge({ type: String, required: true }, { type: String })).to.have.property('required').equal(true);
-		expect(merge({ type: String }, { type: String, required: true })).to.have.property('required').equal(true);
+		expect(merge({ type: String, required: true }).with({ type: String })).to.have.property('required').equal(true);
+		expect(merge({ type: String }).with({ type: String, required: true })).to.have.property('required').equal(true);
 	});
 	it ('should come back with array', () => {
-		const result = merge([{ type: String }], [{ type: Date }]);
+		const result = merge([{ type: String }]).with([{ type: Date }]);
 		expect(result).to.have.property('type').equal(Array);
 		expect(result.schema).to.have.property('type').equal(Date);
 	});
@@ -20,7 +20,7 @@ describe('merge', () => {
 		const result = merge({
 			'this': { type: String },
 			'is': { type: String}
-		}, {
+		}).with({
 			'is': { type: String, required: true },
 			'a': { type: Number },
 			'test': { type: Date}
