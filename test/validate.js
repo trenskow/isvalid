@@ -360,6 +360,9 @@ describe('validate', function() {
 	});
 	describe('object validator', function() {
 		commonTests.all(Object, {}, 123);
+		it('should come back with same input if sub-schema is not provided.', () => {
+			return expect(isvalid({}, {})).to.eventually.eql({});
+		});
 		it('should come out with same input as output if keys can validate.', () => {
 			let s = isvalid({
 				awesome: true,
@@ -480,7 +483,10 @@ describe('validate', function() {
 	});
 	describe('array validator', function() {
 		commonTests.all(Array, [], 123);
-		it('should come out with same input as output if array can validate.', () => {
+		it('should come back with same input if no sub-schema is provided.', () => {
+			return expect(isvalid([], [])).to.eventually.eql([]);
+		});
+		it('should come back with same input as output if array can validate.', () => {
 			let s = isvalid([{
 				awesome: true,
 				why: 'it just is!'

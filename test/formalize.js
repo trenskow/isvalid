@@ -12,9 +12,6 @@ const f = (...args) => {
 
 describe('schema', function() {
 	describe('formalizer', function() {
-		it('should throw an error if array shortcut contains no object.', () => {
-			expect(f([])).to.throw(SchemaError);
-		});
 		it('should throw an error if schema is garbage value.', () => {
 			expect(f(123)).to.throw(SchemaError);
 		});
