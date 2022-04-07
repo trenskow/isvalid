@@ -712,6 +712,21 @@ describe('validate', function() {
 			return expect(isvalid(123, Number))
 				.to.eventually.equal(123);
 		});
+		it('should throw error if non-integers are not allowed.', () => {
+			expect(isvalid(2.2, { type: Number, float: 'deny' })).to.eventually.throw(ValidationError);
+		});
+		it ('should come back with non-integer values if they are allowed.', () => {
+			expect(isvalid(2.2, { type: Number })).to.eventually.equal(2.2);
+		});
+		it ('should come back with number rounded if `float` is set to `round`.', () => {
+			expect(isvalid(2.5, { type: Number, float: 'round' })).to.eventually.equal(3);
+		});
+		it ('should come back with number ceiled if `float` is set to `ceil`.', () => {
+			expect(isvalid(2.2, { type: Number, float: 'ceil' })).to.eventually.equal(3);
+		});
+		it ('should come back with number floored if `float` is set to `floor`.', () => {
+			expect(isvalid(2.8, { type: Number, float: 'ceil' })).to.eventually.equal(2);
+		});
 		describe('range', function() {
 			it('should come back with error if input is not within range.', () => {
 				return expect(isvalid(1, { type: Number, range: '2-4' }))

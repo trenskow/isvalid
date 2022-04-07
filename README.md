@@ -42,6 +42,7 @@
         * [`enum`](#enum)
       - [`Number` Validators](#number-validators)
         * [`range`](#range)
+        * [`float`](#float)
       - [Custom Types](#custom-types)
   * [`post`](#post)
     + [Example](#example-1)
@@ -448,6 +449,26 @@ Examples:
 }
 ````
 
+> Negative values can be wrapped in parentheses.
+
+````javascript
+{
+	type: Array,
+	len: '(-2)-2',
+	schema: { … }
+}
+````
+
+> It also supports non-integer values.
+
+````javascript
+{
+	type: Array,
+	len: '(-2.2)-2.2',
+	schema: { … }
+}
+````
+
 > An array that should have at least 2 items, exactly 5 items or 8 or more items.
 
 ##### `unique`
@@ -498,7 +519,7 @@ This does not do any actual validation. Instead it trims the input in both ends 
 ##### `len`
 Type: `String` or `Number`
 
-This ensures that the string's length is within a specified range. You can use the same formatting as [`Array`'s `len`](#len) validator.
+This ensures that the string's length is within a specified range. You can use the same formatting as [`Array`'s `len`](#len) validator described above (except it does not support ranges with negative values or non-integers).
 
 ##### `match`
 Type: `RegExp`
@@ -535,7 +556,21 @@ Type: `Number`or `String`
 
 This ensures that the number is within a certain range. If not the validator throws an error.
 
-The `range` validator uses the same formatting as the [`Array`'s `len`](#len) validator described above.
+The `range` validator uses the same formatting as the [`Array`'s `len`](#len) validator described above (except it does not support ranges with negative values or non-integers).
+
+##### `float`
+Type: `String` of value: `'allow'`, `'deny'`, `'round'`, `'floor'`, `'ceil'`
+
+This tells the validator how to handle non-integers.
+
+The validator has five options:
+* `'allow'` Allow non-integer values.
+* `'deny'` Throw a `ValidationError` if the value is a non-integer.
+* `'round'` Round value to nearest integer.
+* `'floor'` Round to integer less than or equal to value.
+* `'ceil'` Round to integer bigger than or equal to value.
+
+> Default is `'allow'`.
 
 #### Custom Types
 

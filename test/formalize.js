@@ -165,10 +165,19 @@ describe('schema', function() {
 				equal: '123'
 			})).to.have.property('equal').equal('123');
 		});
-		it('should come back with a priority if non is provided', () => {
+		it('should come back with a priority if non is provided.', () => {
 			expect(formalize({
 				type: Number
 			})).to.have.property('priority').equal(10);
+		});
+		it ('should throw error if number range is not valid.', () => {
+			expect(f({ type: Number, range: 'abc-abc' })).to.throw(SchemaError);
+		});
+		it ('should throw error if string len is negative.', () => {
+			expect(f({ type: String, len: '-2-' })).to.throw(SchemaError);
+		});
+		it ('should throw error if array len is negative.', () => {
+			expect(f({ type: Array, len: '-2-' })).to.throw(SchemaError);
 		});
 	});
 });
