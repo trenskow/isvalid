@@ -757,8 +757,19 @@ describe('validate', function() {
 		commonTests.all(Test, new Test(), 123);
 	});
 	describe('plugin validators', function() {
-		it ('should come back with correct case value.', function() {
-			return expect(isvalid('my-string', { type: String, casing: 'camel' })).to.eventually.eql('myString');
+		it ('should throw error if casing does not match.', function() {
+			return expect(isvalid('my-string', { type: String, ensureCase: 'camel' }))
+				.to.eventually.rejectedWith(ValidationError)
+				.and.to.have.property('message', 'Is not camel case.');
+		});
+		it ('should throw error with custom message if casing does not match.', function() {
+			return expect(isvalid('my-string', { type: String, ensureCase: ['camel', 'Something is not right!'] }))
+				.to.eventually.rejectedWith(ValidationError)
+				.and.to.have.property('message', 'Something is not right!');
+		});
+		it ('should come back with correct value.', function() {
+			return expect(isvalid('myString', { type: String, ensureCase: 'camel' }))
+				.to.eventually.equal('myString');
 		});
 	});
 });
