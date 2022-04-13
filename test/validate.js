@@ -756,4 +756,9 @@ describe('validate', function() {
 	describe('other validator', function() {
 		commonTests.all(Test, new Test(), 123);
 	});
+	describe('plugin validators', function() {
+		it ('should come back with correct case value.', function() {
+			return expect(isvalid('my-string', { type: String, casing: 'camel' })).to.eventually.eql('myString');
+		});
+	});
 });

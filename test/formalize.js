@@ -179,5 +179,11 @@ describe('schema', function() {
 		it ('should throw error if array len is negative.', () => {
 			expect(f({ type: Array, len: '-2-' })).to.throw(SchemaError);
 		});
+		it ('should throw error if validator is not supported', () => {
+			expect(f({ type: String, nonExistingValidator: 'myValue' })).to.throw(SchemaError);
+		});
+		it ('should throw error if plugin validator fails formalizing.', () => {
+			expect(f({ type: String, casing: 'not-supported' })).to.throw(SchemaError);
+		});
 	});
 });
