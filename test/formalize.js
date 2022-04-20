@@ -6,7 +6,7 @@ const expect = require('chai').expect,
 
 const f = (...args) => {
 	return () => {
-		formalize(...args);
+		return formalize(...args);
 	};
 };
 
@@ -183,7 +183,9 @@ describe('schema', function() {
 			expect(f({ type: String, nonExistingValidator: 'myValue' })).to.throw(SchemaError);
 		});
 		it ('should throw error if plugin validator fails formalizing.', () => {
-			expect(f({ type: String, casing: 'not-supported' })).to.throw(SchemaError);
+			expect(f({ type: String, ensureCase: 'not-supported' }))
+				.to.throw(SchemaError)
+				.with.property('message', 'Only case types: `camel`, `domain`, `http`, `kebab`, `lower`, `pascal`, `snake`, `title`, `upper` are supported.');
 		});
 	});
 });

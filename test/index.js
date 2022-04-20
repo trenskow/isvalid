@@ -11,7 +11,7 @@ isvalid.plugins.use(function (utils) {
 	return {
 		supportsType: (type) => utils.isSameType(type, String),
 		validatorsForType: () => { return { ensureCase: String }; },
-		formalizeValidator: (config) => {
+		formalize: (config) => {
 			if (config && !caseit.supported.includes(config)) throw new Error(`Only case types: ${caseit.supported.map((casing) => `\`${casing}\``).join(', ')} are supported.`);
 		},
 		validate: (data, config) => {
