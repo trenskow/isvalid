@@ -619,49 +619,49 @@ describe('validate', function() {
 						.and.to.have.property('validator', 'unique');
 				});
 			});
-			describe('autowrap', function() {
-				it('should come back with non-array wrapped in array', () => {
-					return expect(isvalid({
-						test: true
-					}, {
-						type: Array,
-						autowrap: true,
-						schema: {
-							test: Boolean
-						}
-					})).to.eventually.be.an('array').and.to.have.property(0).and.to.have.property('test', true);
-				});
-				it('should come back with type error if autowrap and not matching sub-schema.', () => {
-					return expect(isvalid({
-						test: 'Not a boolean'
-					}, {
-						type: Array,
-						autowrap: true,
-						schema: {
-							test: Boolean
-						}}))
-						.to.eventually.be.rejectedWith('Is not of type boolean.')
-						.and.to.be.instanceOf(ValidationError)
-						.and.have.property('validator', 'type');
-				});
-				it('should come back with type error if no autowrap and matching sub-schema.', () => {
-					return expect(isvalid({
-						test: true
-					}, [{
-						test: Boolean}]))
-						.to.eventually.be.rejectedWith('Is not of type array.')
-						.and.to.be.instanceOf(ValidationError)
-						.and.have.property('validator', 'type');
-				});
-				it('should prioritize concrete over defaults.', () => {
-					return expect(isvalid(true, {
-						type: Array,
-						autowrap: false
-					}, { defaults: { autowrap: true }}))
-						.to.eventually.be.rejectedWith('Is not of type array.')
-						.and.to.be.instanceOf(ValidationError)
-						.and.have.property('validator', 'type');
-				});
+		});
+		describe('autowrap', function() {
+			it('should come back with non-array wrapped in array', () => {
+				return expect(isvalid({
+					test: true
+				}, {
+					type: Array,
+					autowrap: true,
+					schema: {
+						test: Boolean
+					}
+				})).to.eventually.be.an('array').and.to.have.property(0).and.to.have.property('test', true);
+			});
+			it('should come back with type error if autowrap and not matching sub-schema.', () => {
+				return expect(isvalid({
+					test: 'Not a boolean'
+				}, {
+					type: Array,
+					autowrap: true,
+					schema: {
+						test: Boolean
+					}}))
+					.to.eventually.be.rejectedWith('Is not of type boolean.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'type');
+			});
+			it('should come back with type error if no autowrap and matching sub-schema.', () => {
+				return expect(isvalid({
+					test: true
+				}, [{
+					test: Boolean}]))
+					.to.eventually.be.rejectedWith('Is not of type array.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'type');
+			});
+			it('should prioritize concrete over defaults.', () => {
+				return expect(isvalid(true, {
+					type: Array,
+					autowrap: false
+				}, { defaults: { autowrap: true }}))
+					.to.eventually.be.rejectedWith('Is not of type array.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'type');
 			});
 		});
 	});
@@ -771,24 +771,6 @@ describe('validate', function() {
 			return expect(isvalid(123, Number))
 				.to.eventually.equal(123);
 		});
-		it('should throw error if non-integers are not allowed.', () => {
-			return  expect(isvalid(2.2, { type: Number, float: 'deny' }))
-				.to.eventually.be.rejectedWith('Number must be an integer.')
-				.and.to.be.instanceOf(ValidationError)
-				.and.have.property('validator', 'float');
-		});
-		it ('should come back with non-integer values if they are allowed.', () => {
-			return expect(isvalid(2.2, { type: Number })).to.eventually.equal(2.2);
-		});
-		it ('should come back with number rounded if `float` is set to `round`.', () => {
-			return expect(isvalid(2.5, { type: Number, float: 'round' })).to.eventually.equal(3);
-		});
-		it ('should come back with number ceiled if `float` is set to `ceil`.', () => {
-			return expect(isvalid(2.2, { type: Number, float: 'ceil' })).to.eventually.equal(3);
-		});
-		it ('should come back with number floored if `float` is set to `floor`.', () => {
-			return expect(isvalid(2.8, { type: Number, float: 'floor' })).to.eventually.equal(2);
-		});
 		describe('range', function() {
 			it('should come back with error if input is not within range.', () => {
 				return expect(isvalid(1, { type: Number, range: '2-4' }))
@@ -812,6 +794,26 @@ describe('validate', function() {
 						.and.to.be.instanceOf(ValidationError)
 						.and.to.have.property('validator', 'range');
 				});
+			});
+		});
+		describe('float', function() {
+			it('should throw error if non-integers are not allowed.', () => {
+				return  expect(isvalid(2.2, { type: Number, float: 'deny' }))
+					.to.eventually.be.rejectedWith('Number must be an integer.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'float');
+			});
+			it ('should come back with non-integer values if they are allowed.', () => {
+				return expect(isvalid(2.2, { type: Number })).to.eventually.equal(2.2);
+			});
+			it ('should come back with number rounded if `float` is set to `round`.', () => {
+				return expect(isvalid(2.5, { type: Number, float: 'round' })).to.eventually.equal(3);
+			});
+			it ('should come back with number ceiled if `float` is set to `ceil`.', () => {
+				return expect(isvalid(2.2, { type: Number, float: 'ceil' })).to.eventually.equal(3);
+			});
+			it ('should come back with number floored if `float` is set to `floor`.', () => {
+				return expect(isvalid(2.8, { type: Number, float: 'floor' })).to.eventually.equal(2);
 			});
 		});
 	});
