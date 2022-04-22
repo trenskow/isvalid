@@ -19,7 +19,8 @@ const commonTests = {
 		describe('type', function() {
 			it(`should come back with an error if input is not a(n) ${utils.typeName(type)}.`, () => {
 				return expect(isvalid(invalidData, type))
-					.to.eventually.be.rejectedWith(ValidationError)
+					.to.eventually.be.rejectedWith(`Is not of type ${utils.typeName(type)}.`)
+					.and.to.be.instanceOf(ValidationError)
 					.and.to.have.property('validator', 'type');
 			});
 			it(`should come back with no error if input is a(n) ${utils.typeName(type)}.`, () => {
@@ -35,8 +36,10 @@ const commonTests = {
 						type: type,
 						errors: {
 							type: 'Type custom error message.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Type custom error message.');
+						}}))
+						.to.eventually.be.rejectedWith('Type custom error message.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.has.property('validator', 'type');
 				});
 			});
 		});
@@ -46,8 +49,10 @@ const commonTests = {
 			it('should come back with an error if required and input is undefined.', () => {
 				return expect(isvalid(undefined, {
 					type: type,
-					required: true
-				})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('validator', 'required');
+					required: true}))
+					.to.eventually.be.rejectedWith('Data is required.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.to.have.property('validator', 'required');
 			});
 			it('should come back with no error if required and input is present', () => {
 				return expect(isvalid(validData, {
@@ -70,8 +75,10 @@ const commonTests = {
 						required: true,
 						errors: {
 							required: 'Required custom error message.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Required custom error message.');
+						}}))
+						.to.eventually.be.rejectedWith('Required custom error message.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.has.property('validator', 'required');
 				});
 			});
 		});
@@ -81,8 +88,10 @@ const commonTests = {
 			it('should come back with an error if required and does not allow null and input is null.', () => {
 				return expect(isvalid(null, {
 					type: type,
-					required: true
-				})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('validator', 'allowNull');
+					required: true}))
+					.to.eventually.be.rejectedWith('Cannot be null.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.to.have.property('validator', 'allowNull');
 			});
 			it('should come back with no error if required and allows null and input is null.', () => {
 				return expect(isvalid(null, {
@@ -94,8 +103,10 @@ const commonTests = {
 			it('should prioritize concrete over defaults.', () => {
 				return expect(isvalid(null, {
 					type: type,
-					allowNull: false
-				}, { defaults: { allowNull: true }})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('validator', 'allowNull');
+					allowNull: false}, { defaults: { allowNull: true }}))
+					.to.eventually.be.rejectedWith('Cannot be null.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.to.have.property('validator', 'allowNull');
 			});
 			describe('#errors', function() {
 				it('should come back with an error with custom message if required and does not allow null and input is null.', () => {
@@ -104,8 +115,10 @@ const commonTests = {
 						required: true,
 						errors: {
 							allowNull: 'Allow null custom error message.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'Allow null custom error message.');
+						}}))
+						.to.eventually.be.rejectedWith('Allow null custom error message.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.has.property('validator', 'allowNull');
 				});
 			});
 		});
@@ -150,8 +163,10 @@ const commonTests = {
 			});
 			it('should come back with error if data does not equal.', () => {
 				return expect(isvalid(invalidData, {
-					equal: validData
-				})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('validator', 'equal');
+					equal: validData}))
+					.to.eventually.be.rejectedWith(`Data does not equal ${validData}.`)
+					.and.to.be.instanceOf(ValidationError)
+					.and.to.have.property('validator', 'equal');
 			});
 		});
 	},
@@ -176,8 +191,10 @@ const commonTests = {
 				return expect(isvalid('test', {
 					post: function() {
 						throw new Error('an error');
-					}
-				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('message', 'an error');
+					}}))
+					.to.eventually.be.rejectedWith('an error')
+					.and.to.be.instanceOf(ValidationError)
+					.and.has.property('message', 'an error');
 			});
 			it('should return original object if synchronous function doesn\'t return.', () => {
 				return expect(isvalid('test', {
@@ -191,10 +208,12 @@ const commonTests = {
 			});
 			it('should reformat err if post is specified and returns an error.', () => {
 				return expect(isvalid({}, {
-					post: function(obj, schema, fn) {
-						fn(new Error('This is an error'));
-					}
-				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('validator', 'post');
+					post: async function() {
+						throw new Error('an error');
+					}}))
+					.to.eventually.be.rejectedWith('an error')
+					.and.to.be.instanceOf(ValidationError)
+					.and.has.property('validator', 'post');
 			});
 			it('should pass on post schema options if specified.', () => {
 				return expect(isvalid({}, {
@@ -272,8 +291,10 @@ const commonTests = {
 							assert(false, 'This post function should not have been called.');
 							return data + 3;
 						}
-					]
-				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'post');
+					]}))
+					.to.eventually.be.rejectedWith('Stop here')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'post');
 			});
 			it('should have the full validated data so far as a parameter', () => {
 				return expect(isvalid({ why: {} }, {
@@ -325,12 +346,14 @@ describe('validate', function() {
 		});
 		it('should come back with error if string is supplied - but not a number.', () => {
 			return expect(isvalid('abc', Number))
-				.to.eventually.be.rejectedWith(ValidationError)
+				.to.eventually.be.rejectedWith('Is not of type number.')
+				.and.to.be.instanceOf(ValidationError)
 				.and.to.have.property('validator', 'type');
 		});
 		it('should come back with error if wrong E notation is supplied - but not a number.', () => {
 			return expect(isvalid('12e', Number))
-				.to.eventually.be.rejectedWith(ValidationError)
+				.to.eventually.be.rejectedWith('Is not of type number.')
+				.and.to.be.instanceOf(ValidationError)
 				.and.to.have.property('validator', 'type');
 		});
 		it('should come back with no error and validData set to true if input is string with \'True\'.', () => {
@@ -341,7 +364,8 @@ describe('validate', function() {
 		});
 		it('should come back with error and if string is supplied - but not \'true\' or \'false\'.', () => {
 			return expect(isvalid('123', Boolean))
-				.to.eventually.be.rejectedWith(ValidationError)
+				.to.eventually.be.rejectedWith('Is not of type boolean.')
+				.and.to.be.instanceOf(ValidationError)
 				.and.to.have.property('validator', 'type');
 		});
 		it('should come back with no error and validData set to a Date if input is string with an ISO date.', () => {
@@ -354,7 +378,8 @@ describe('validate', function() {
 		});
 		it('should come back with error and if string is supplied - but not ISO date.', () => {
 			return expect(isvalid('19/10/14 2:24:42', Date))
-				.to.eventually.be.rejectedWith(ValidationError)
+				.to.eventually.be.rejectedWith('Is not of type date.')
+				.and.to.be.instanceOf(ValidationError)
 				.and.to.have.property('validator', 'type');
 		});
 	});
@@ -423,8 +448,10 @@ describe('validate', function() {
 					awesome: true,
 					why: 'it just is!'
 				}, {
-					awesome: Boolean
-				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('validator', 'unknownKeys');
+					awesome: Boolean}))
+					.to.eventually.be.rejectedWith('Unknown key.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.has.property('validator', 'unknownKeys');
 			});
 			it('should come back with error if there are unknown keys and unknownKeys is set to \'deny\'.', () => {
 				return expect(isvalid({
@@ -435,8 +462,10 @@ describe('validate', function() {
 					unknownKeys: 'deny',
 					schema: {
 						awesome: Boolean
-					}
-				})).to.eventually.be.rejectedWith(ValidationError).and.has.property('validator', 'unknownKeys');
+					}}))
+					.to.eventually.be.rejectedWith('Unknown key.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.has.property('validator', 'unknownKeys');
 			});
 			it('should come back with keys removed if unknown keys and unknownKeys is set to \'remove\'.', () => {
 				return expect(isvalid({
@@ -458,8 +487,10 @@ describe('validate', function() {
 								type: String,
 								required: true
 							}
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('keyPath').to.have.members(['myObject', 'myKey']);
+						}}))
+						.to.eventually.be.rejectedWith('Data is required.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('keyPath').to.have.members(['myObject', 'myKey']);
 				});
 			});
 			describe('#errors', function() {
@@ -475,8 +506,10 @@ describe('validate', function() {
 						},
 						errors: {
 							unknownKeys: 'Not allowed.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'Not allowed.');
+						}}))
+						.to.eventually.be.rejectedWith('Not allowed.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('message', 'Not allowed.');
 				});
 			});
 		});
@@ -509,8 +542,10 @@ describe('validate', function() {
 					type: Array,
 					schema: {
 						type: String,
-					}
-				}, { keyPath: 'root'})).to.eventually.be.rejectedWith(ValidationError).and.have.property('keyPath').eql(['root', 0]);
+					}}, { keyPath: 'root'}))
+					.to.eventually.be.rejectedWith('Is not of type string.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('keyPath').eql(['root', 0]);
 			});
 		});
 		describe('len', function() {
@@ -525,8 +560,10 @@ describe('validate', function() {
 				return expect(isvalid([], {
 					type: Array,
 					len: '2-',
-					schema: {}
-				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'len');
+					schema: {}}))
+					.to.eventually.be.rejectedWith('Array length is not within range of \'2-\'.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'len');
 			});
 			describe('#errors', function() {
 				it('should come back with error of post message if array length is not within ranges of len.', () => {
@@ -536,8 +573,10 @@ describe('validate', function() {
 						schema: {},
 						errors: {
 							len: 'Not within range.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'Not within range.');
+						}}))
+						.to.eventually.be.rejectedWith('Not within range.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'len');
 				});
 			});
 		});
@@ -550,8 +589,10 @@ describe('validate', function() {
 				}], {
 					type: Array,
 					unique: true,
-					schema: { awesome: Boolean }
-				})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'unique');
+					schema: { awesome: Boolean }}))
+					.to.eventually.be.rejectedWith('Array is not unique.')
+					.and.to.be.instanceOf(ValidationError)
+					.and.have.property('validator', 'unique');
 			});
 			it('should come back with no error if array of strings is unique.', () => {
 				return expect(isvalid(['This', 'is', 'an', 'array'], {
@@ -572,8 +613,10 @@ describe('validate', function() {
 						schema: { awesome: Boolean },
 						errors: {
 							unique: 'Not a set.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('message', 'Not a set.');
+						}}))
+						.to.eventually.be.rejectedWith('Not a set.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.to.have.property('validator', 'unique');
 				});
 			});
 			describe('autowrap', function() {
@@ -596,21 +639,28 @@ describe('validate', function() {
 						autowrap: true,
 						schema: {
 							test: Boolean
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'type');
+						}}))
+						.to.eventually.be.rejectedWith('Is not of type boolean.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'type');
 				});
 				it('should come back with type error if no autowrap and matching sub-schema.', () => {
 					return expect(isvalid({
 						test: true
 					}, [{
-						test: Boolean
-					}])).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'type');
+						test: Boolean}]))
+						.to.eventually.be.rejectedWith('Is not of type array.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'type');
 				});
 				it('should prioritize concrete over defaults.', () => {
 					return expect(isvalid(true, {
 						type: Array,
 						autowrap: false
-					}, { defaults: { autowrap: true }})).to.eventually.be.rejectedWith(ValidationError).and.have.property('validator', 'type');
+					}, { defaults: { autowrap: true }}))
+						.to.eventually.be.rejectedWith('Is not of type array.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'type');
 				});
 			});
 		});
@@ -643,7 +693,8 @@ describe('validate', function() {
 		describe('match', function() {
 			it('should come back with an error if string does not match RegExp.', () => {
 				return expect(isvalid('123', { type: 'string', match: /^[a-z]+$/ }))
-					.to.eventually.be.rejectedWith(ValidationError)
+					.to.eventually.be.rejectedWith('Does not match expression ^[a-z]+$.')
+					.and.to.be.instanceOf(ValidationError)
 					.and.to.have.property('validator', 'match');
 			});
 			it('should come back with no error and validData should match input string when match is specified and input matches.', () => {
@@ -657,15 +708,18 @@ describe('validate', function() {
 						match: /^[a-z]+$/,
 						errors: {
 							match: 'Must be a string of letters from a to z.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'Must be a string of letters from a to z.');
+						}}))
+						.to.eventually.be.rejectedWith('Must be a string of letters from a to z.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'match');
 				});
 			});
 		});
 		describe('enum', function() {
 			it('should come back with an error if string is not in enum.', () => {
 				return expect(isvalid('123', { type: 'string', enum: ['this','test'] }))
-					.to.eventually.be.rejectedWith(ValidationError)
+					.to.eventually.be.rejectedWith('Possible values are "this" and "test".')
+					.and.to.be.instanceOf(ValidationError)
 					.and.have.property('validator', 'enum');
 			});
 			it('should come back with no error if string is in enum.', () => {
@@ -679,15 +733,18 @@ describe('validate', function() {
 						enum: ['this','is','a','test'],
 						errors: {
 							enum: 'Must be a word from the sentence "this is a test".'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'Must be a word from the sentence "this is a test".');
+						}}))
+						.to.eventually.be.rejectedWith('Must be a word from the sentence "this is a test".')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'enum');
 				});
 			});
 		});
 		describe('length', function() {
 			it('should come back with an error if string is not with range.', () => {
 				return expect(isvalid('123', { type: 'string', len: '-2'}))
-					.to.eventually.be.rejectedWith(ValidationError)
+					.to.eventually.be.rejectedWith('String length is not within range of -2')
+					.and.to.be.instanceOf(ValidationError)
 					.and.have.property('validator', 'len');
 			});
 			it('should come back with no error if string is within range.', () => {
@@ -700,8 +757,10 @@ describe('validate', function() {
 				it ('should come back with a custom error message', () => {
 					return expect(isvalid('123', {
 						type: 'string',
-						len: ['-2', 'My custom error'],
-					})).to.eventually.be.rejectedWith(ValidationError).and.have.property('message', 'My custom error');
+						len: ['-2', 'My custom error']}))
+						.to.eventually.be.rejectedWith('My custom error')
+						.and.to.be.instanceOf(ValidationError)
+						.and.have.property('validator', 'len');
 				});
 			});
 		});
@@ -713,24 +772,28 @@ describe('validate', function() {
 				.to.eventually.equal(123);
 		});
 		it('should throw error if non-integers are not allowed.', () => {
-			expect(isvalid(2.2, { type: Number, float: 'deny' })).to.eventually.throw(ValidationError);
+			return  expect(isvalid(2.2, { type: Number, float: 'deny' }))
+				.to.eventually.be.rejectedWith('Number must be an integer.')
+				.and.to.be.instanceOf(ValidationError)
+				.and.have.property('validator', 'float');
 		});
 		it ('should come back with non-integer values if they are allowed.', () => {
-			expect(isvalid(2.2, { type: Number })).to.eventually.equal(2.2);
+			return expect(isvalid(2.2, { type: Number })).to.eventually.equal(2.2);
 		});
 		it ('should come back with number rounded if `float` is set to `round`.', () => {
-			expect(isvalid(2.5, { type: Number, float: 'round' })).to.eventually.equal(3);
+			return expect(isvalid(2.5, { type: Number, float: 'round' })).to.eventually.equal(3);
 		});
 		it ('should come back with number ceiled if `float` is set to `ceil`.', () => {
-			expect(isvalid(2.2, { type: Number, float: 'ceil' })).to.eventually.equal(3);
+			return expect(isvalid(2.2, { type: Number, float: 'ceil' })).to.eventually.equal(3);
 		});
 		it ('should come back with number floored if `float` is set to `floor`.', () => {
-			expect(isvalid(2.8, { type: Number, float: 'ceil' })).to.eventually.equal(2);
+			return expect(isvalid(2.8, { type: Number, float: 'floor' })).to.eventually.equal(2);
 		});
 		describe('range', function() {
 			it('should come back with error if input is not within range.', () => {
 				return expect(isvalid(1, { type: Number, range: '2-4' }))
-					.to.eventually.be.rejectedWith(ValidationError)
+					.to.eventually.be.rejectedWith('Not within')
+					.and.to.be.instanceOf(ValidationError)
 					.and.to.have.property('validator', 'range');
 			});
 			it('should come back with no error and output same as input if within range.', () => {
@@ -744,14 +807,16 @@ describe('validate', function() {
 						range: '2-4',
 						errors: {
 							range: 'Must be between 2 and 4.'
-						}
-					})).to.eventually.be.rejectedWith(ValidationError).and.to.have.property('message', 'Must be between 2 and 4.');
+						}}))
+						.to.eventually.be.rejectedWith('Must be between 2 and 4.')
+						.and.to.be.instanceOf(ValidationError)
+						.and.to.have.property('validator', 'range');
 				});
 			});
 		});
 	});
 	describe('date validator', function() {
-		commonTests.all('date', new Date(), 123);
+		commonTests.all(Date, new Date(), 123);
 	});
 	describe('other validator', function() {
 		commonTests.all(Test, new Test(), 123);
@@ -759,13 +824,15 @@ describe('validate', function() {
 	describe('plugin validators', function() {
 		it ('should throw error if casing does not match.', function() {
 			return expect(isvalid('my-string', { type: String, ensureCase: 'camel' }))
-				.to.eventually.rejectedWith(ValidationError)
-				.and.to.have.property('message', 'Is not camel case.');
+				.to.eventually.rejectedWith('Is not camel case.')
+				.and.to.be.instanceOf(ValidationError)
+				.and.to.have.property('validator', 'ensureCase');
 		});
 		it ('should throw error with custom message if casing does not match.', function() {
 			return expect(isvalid('my-string', { type: String, ensureCase: ['camel', 'Something is not right!'] }))
-				.to.eventually.rejectedWith(ValidationError)
-				.and.to.have.property('message', 'Something is not right!');
+				.to.eventually.rejectedWith('Something is not right!')
+				.and.to.be.instanceOf(ValidationError)
+				.and.to.have.property('validator', 'ensureCase');
 		});
 		it ('should come back with correct value.', function() {
 			return expect(isvalid('myString', { type: String, ensureCase: 'camel' }))

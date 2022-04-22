@@ -185,7 +185,7 @@ describe('schema', function() {
 		it ('should throw error if plugin validator fails formalizing.', () => {
 			expect(f({ type: String, ensureCase: 'not-supported' }))
 				.to.throw(SchemaError)
-				.with.property('message', 'Only case types: `camel`, `domain`, `http`, `kebab`, `lower`, `pascal`, `snake`, `title`, `upper` are supported.');
+				.with.property('message', 'Only case types: `camel`, `domain`, `http`, `kebab`, `pascal`, `snake`, `title` are supported.');
 		});
 	});
 });
