@@ -1,7 +1,13 @@
-'use strict';
+//
+// merge.js
+//
+// Created by Kristian Trenskow on 2021-10-02
+//
+// See license in LICENSE
+//
 
-const expect = require('chai').expect,
-	merge = require('../lib/merge.js');
+import { expect } from 'chai';
+import merge from '../lib/merge.js';
 
 describe('merge', () => {
 	it ('should come back with destination type.', () => {

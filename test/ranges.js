@@ -1,11 +1,17 @@
-'use strict';
+//
+// ranges.js
+//
+// Created by Kristian Trenskow on 2014-06-06
+//
+// See license in LICENSE
+//
 
-const expect = require('chai').expect,
-	ranges = require('../lib/ranges.js');
+import { expect } from 'chai';
+import { formalize, testIndex } from '../lib/ranges.js';
 
 function r(range, value) {
-	const formalized = ranges.formalize(range);
-	return ranges.testIndex(formalized, value);
+	const formalized = formalize(range);
+	return testIndex(formalized, value);
 }
 
 describe('ranges', function() {

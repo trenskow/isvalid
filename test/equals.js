@@ -1,8 +1,13 @@
-/*jshint expr: true*/
-'use strict';
+//
+// equals.js
+//
+// Created by Kristian Trenskow on 2015-08-30
+//
+// See license in LICENSE
+//
 
-const expect = require('chai').expect,
-	equals = require('../lib/equals.js');
+import { expect } from 'chai';
+import equals from '../lib/equals.js';
 
 describe('equals', function() {
 	it('should return false if data is not of the same type (null).', () => {

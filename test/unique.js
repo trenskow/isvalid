@@ -1,8 +1,13 @@
-/*jshint expr: true*/
-'use strict';
+//
+// unique.js
+//
+// Created by Kristian Trenskow on 2014-06-06
+//
+// See license in LICENSE
+//
 
-const expect = require('chai').expect,
-	unique = require('../lib/unique.js');
+import { expect } from 'chai';
+import unique from '../lib/unique.js';
 
 describe('unique', function() {
 	it('should return false if array of objects is not unique.', () => {

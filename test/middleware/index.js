@@ -1,14 +1,17 @@
-'use strict';
+//
+// index.js
+//
+// Created by Kristian Trenskow on 2015-08-25
+//
+// See license in LICENSE
+//
 
-var request = require('supertest'),
-	expect = require('chai').expect;
+import request from 'supertest';
+import { expect } from 'chai';
+
+import app from './tools/server.js';
 
 describe('middleware', function() {
-
-	var app;
-	before(function() {
-		app = require('./tools/server.js');
-	});
 
 	describe('param validator', function() {
 

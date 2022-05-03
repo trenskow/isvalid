@@ -1,8 +1,14 @@
-'use strict';
+//
+// server.js
+//
+// Created by Kristian Trenskow on 2015-07-27
+//
+// See license in LICENSE
+//
 
-var validate = require('../../../lib/middleware.js'),
-	express = require('express'),
-	bodyParser = require('body-parser');
+import { param, parameter, query, body } from '../../../lib/middleware.js';
+import express from 'express';
+import bodyParser from 'body-parser';
 
 // We build a simple express test in order to test the middleware
 //
@@ -10,11 +16,11 @@ var app = express();
 
 app.use(bodyParser.json());
 
-app.param('testParam', validate.param({
+app.param('testParam', param({
 	type: Number, required: true
 }));
 
-app.param('cbTestParam', validate.param({
+app.param('cbTestParam', param({
 	type: String,
 	required: true,
 	post: (data, schema, { options }) => {
@@ -23,7 +29,7 @@ app.param('cbTestParam', validate.param({
 }));
 
 app.get('/parameter/:testParam',
-	validate.parameter('testParam', {
+	parameter('testParam', {
 		type: Number,
 		post: (data) => data + 1
 	}),
@@ -38,7 +44,7 @@ app.get('/param/:testParam', function(req, res) {
 app.get('/cbParam/:cbTestParam', function() {});
 
 app.get('/query',
-	validate.query({
+	query({
 		'test': { type: String, match: /^.*?test$/i }
 	}),
 	function(req, res) {
@@ -47,7 +53,7 @@ app.get('/query',
 );
 
 app.post('/post',
-	validate.body({
+	body({
 		'test': [ { type: String, match: /^.*?test$/i } ]
 	}),
 	function(req, res) {
@@ -68,4 +74,4 @@ app.use(function(err, req, res, _) {
 	res.status(500).json({error: 'internal-server-error'});
 });
 
-exports = module.exports = app;
+export default app;

@@ -4,6 +4,7 @@ NOTICE: If your version number is not explicitly specified, it contains bug fixe
 
 ## Version 4.0.0
 
+* Converted to use ES modules.
 * The `allowNull` validator has been changed to `null`.
 
 ## Version 3.0.0

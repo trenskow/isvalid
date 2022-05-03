@@ -1,12 +1,15 @@
-/*jshint expr: true*/
-'use strict';
+//
+// validate.js
+//
+// Created by Kristian Trenskow on 2014-06-06
+//
+// See license in LICENSE
+//
 
-const chai = require('chai'),
-	expect = chai.expect,
-	assert = chai.assert,
-	ValidationError = require('../lib/errors/validation.js'),
-	isvalid = require('../'),
-	utils = require('../lib/utils.js');
+import { expect, assert } from 'chai';
+import ValidationError from '../lib/errors/validation.js';
+import isvalid from '../index.js';
+import { typeName, instanceTypeName, isSameType } from '../lib/utils.js';
 
 class Test {
 	constructor() {
@@ -17,21 +20,21 @@ class Test {
 const commonTests = {
 	type: function(type, validData, invalidData) {
 		describe('type', function() {
-			it(`should come back with an error if input is not a(n) ${utils.typeName(type)}.`, () => {
+			it(`should come back with an error if input is not a(n) ${typeName(type)}.`, () => {
 				return expect(isvalid(invalidData, type))
-					.to.eventually.be.rejectedWith(`Is not of type ${utils.typeName(type)}.`)
+					.to.eventually.be.rejectedWith(`Is not of type ${typeName(type)}.`)
 					.and.to.be.instanceOf(ValidationError)
 					.and.to.have.property('validator', 'type');
 			});
-			it(`should come back with no error if input is a(n) ${utils.typeName(type)}.`, () => {
+			it(`should come back with no error if input is a(n) ${typeName(type)}.`, () => {
 				return expect(isvalid(validData, {
 					type: type
 				})).to.eventually.satisfy((data) => {
-					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
+					return isSameType(instanceTypeName(data), typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			describe('#errors', function() {
-				it(`should come back with an error of custom message if input is not a(n) ${utils.typeName(type)}.`, () => {
+				it(`should come back with an error of custom message if input is not a(n) ${typeName(type)}.`, () => {
 					return expect(isvalid(invalidData, {
 						type: type,
 						errors: {
@@ -59,7 +62,7 @@ const commonTests = {
 					type: type,
 					required: true
 				})).to.eventually.satisfy((data) => {
-					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
+					return isSameType(instanceTypeName(data), typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should prioritize concrete over defaults.', () => {
@@ -122,19 +125,19 @@ const commonTests = {
 				return expect(isvalid(undefined, { type: type, default: async () => {
 					return validData;
 				}})).to.eventually.satisfy((data) => {
-					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
+					return isSameType(instanceTypeName(data), typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should call default if default is a function.', () => {
 				return expect(isvalid(undefined, { type: type, default: () => {
 					return validData;
 				}})).to.eventually.satisfy((data) => {
-					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
+					return isSameType(instanceTypeName(data), typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should call default if default is a value.', () => {
 				return expect(isvalid(undefined, { type: type, default: validData })).to.eventually.satisfy((data) => {
-					return utils.isSameType(utils.instanceTypeName(data), utils.typeName(type)) || (typeof type !== 'string' && data instanceof type);
+					return isSameType(instanceTypeName(data), typeName(type)) || (typeof type !== 'string' && data instanceof type);
 				});
 			});
 			it('should call default with options if options are provided.', () => {

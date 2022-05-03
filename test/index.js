@@ -1,18 +1,24 @@
-'use strict';
+//
+// index.js
+//
+// Created by Kristian Trenskow on 2015-09-27
+//
+// See license in LICENSE
+//
 
-const chai = require('chai'),
-	chaiAsPromised = require('chai-as-promised'),
-	caseit = require('@trenskow/caseit'),
-	isvalid = require('../');
+import { use as chaiUse } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import caseit, { supported } from '@trenskow/caseit';
+import { use } from '../lib/plugins.js';
 
-chai.use(chaiAsPromised);
+chaiUse(chaiAsPromised);
 
-isvalid.plugins.use(function (utils) {
+use(function (utils) {
 	return {
 		supportsType: (type) => utils.isSameType(type, String),
 		validatorsForType: () => { return { ensureCase: String }; },
 		formalize: (config) => {
-			if (config && !caseit.supported.includes(config)) throw new Error(`Only case types: ${caseit.supported.map((casing) => `\`${casing}\``).join(', ')} are supported.`);
+			if (config && !supported.includes(config)) throw new Error(`Only case types: ${supported.map((casing) => `\`${casing}\``).join(', ')} are supported.`);
 		},
 		validate: (data, config) => {
 			if (caseit(data, config) !== data) throw new Error(`Is not ${config} case.`);
@@ -21,11 +27,11 @@ isvalid.plugins.use(function (utils) {
 	};
 });
 
-require('./ranges.js');
-require('./equals.js');
-require('./unique.js');
-require('./formalize.js');
-require('./validate.js');
-require('./middleware/');
-require('./key-paths');
-require('./merge');
+import './ranges.js';
+import './equals.js';
+import './unique.js';
+import './formalize.js';
+import './validate.js';
+import './middleware/index.js';
+import './key-paths.js';
+import './merge.js';

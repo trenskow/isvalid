@@ -1,8 +1,14 @@
-'use strict';
+//
+// formalize.js
+//
+// Created by Kristian Trenskow on 2018-12-12
+//
+// See license in LICENSE
+//
 
-const expect = require('chai').expect,
-	formalize = require('../lib/formalize.js'),
-	SchemaError = require('../lib/errors/schema.js');
+import { expect } from 'chai';
+import formalize from '../lib/formalize.js';
+import SchemaError from '../lib/errors/schema.js';
 
 const f = (...args) => {
 	return () => {

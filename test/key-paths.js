@@ -1,7 +1,13 @@
-'use strict';
+//
+// key-paths.js
+//
+// Created by Kristian Trenskow on 2021-08-18
+//
+// See license in LICENSE
+//
 
-const expect = require('chai').expect,
-	keyPaths = require('../lib/key-paths.js');
+import { expect } from 'chai';
+import keyPaths from '../lib/key-paths.js';
 
 describe('keyPaths', () => {
 	it ('should come back with empty key paths', () => {
