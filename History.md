@@ -2,6 +2,14 @@
 
 NOTICE: If your version number is not explicitly specified, it contains bug fixes or changes to internal workings.
 
+## Version 4.0.0
+
+* The `allowNull` validator has been changed to `null`.
+
+## Version 3.0.0
+
+* The minimum ECMAScript version supported has been bumped to 2018.
+
 ## Version 2.7.0
 
 * The ability for custom errors has been under the hood for some time - just not very well tested. Now it's official.

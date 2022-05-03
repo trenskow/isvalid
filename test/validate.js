@@ -83,43 +83,36 @@ const commonTests = {
 			});
 		});
 	},
-	allowNull: function(type) {
-		describe('allowNull', function() {
+	null: function(type) {
+		describe('null', function() {
 			it('should come back with an error if required and does not allow null and input is null.', () => {
 				return expect(isvalid(null, {
 					type: type,
+					null: 'deny',
 					required: true}))
 					.to.eventually.be.rejectedWith('Cannot be null.')
 					.and.to.be.instanceOf(ValidationError)
-					.and.to.have.property('validator', 'allowNull');
+					.and.to.have.property('validator', 'null');
 			});
-			it('should come back with no error if required and allows null and input is null.', () => {
+			it('should come back with no error if required and null is allowed and input is null.', () => {
 				return expect(isvalid(null, {
 					type: type,
 					required: true,
-					allowNull: true
+					null: 'allow'
 				})).to.eventually.be.null;
 			});
-			it('should prioritize concrete over defaults.', () => {
+			it('should come back with no error if required and null is allowed and input is null.', () => {
 				return expect(isvalid(null, {
 					type: type,
-					allowNull: false}, { defaults: { allowNull: true }}))
-					.to.eventually.be.rejectedWith('Cannot be null.')
-					.and.to.be.instanceOf(ValidationError)
-					.and.to.have.property('validator', 'allowNull');
+					required: true,
+					null: 'allow'
+				})).to.eventually.be.null;
 			});
-			describe('#errors', function() {
-				it('should come back with an error with custom message if required and does not allow null and input is null.', () => {
-					expect(isvalid(null, {
-						type: type,
-						required: true,
-						errors: {
-							allowNull: 'Allow null custom error message.'
-						}}))
-						.to.eventually.be.rejectedWith('Allow null custom error message.')
-						.and.to.be.instanceOf(ValidationError)
-						.and.has.property('validator', 'allowNull');
-				});
+			it('should come back with no error and undefined if null is set to undefine input and input is null.', () => {
+				return expect(isvalid(null, {
+					type: type,
+					null: 'undefine'
+				})).to.eventually.be.undefined;
 			});
 		});
 	},
@@ -314,7 +307,7 @@ const commonTests = {
 		});
 	},
 	all: function(type, validData, invalidData) { var self = this;
-		['type', 'required', 'allowNull', 'default', 'equal', 'post'].forEach(function(test) {
+		['type', 'required', 'null', 'default', 'equal', 'post'].forEach(function(test) {
 			self[test](type, validData, invalidData);
 		});
 	}

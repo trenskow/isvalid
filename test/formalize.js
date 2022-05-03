@@ -49,6 +49,9 @@ describe('schema', function() {
 		it('should throw an error if unknownKeys is not \'allow\', \'deny\' or \'remove\'.', () => {
 			expect(f({ type: Object, unknownKeys: 'test' })).to.throw(SchemaError);
 		});
+		it('should throw an error if null is not \'allow\', \'deny\' or \'undefine\'.', () => {
+			expect(f({ type: String, null: 'test' })).to.throw(SchemaError);
+		});
 		it('should throw an error if object schema is unknown type.', () => {
 			expect(f({ type: Object, schema: RegExp })).to.throw(SchemaError);
 		});

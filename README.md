@@ -22,7 +22,6 @@
         * [Synchronous Functions](#synchronous-functions)
       - [`required`](#required)
         * [Implicitly Required](#implicitly-required)
-      - [`allowNull`](#allownull)
       - [`equal`](#equal)
       - [`errors` (Custom Error Messages)](#errors-custom-error-messages)
         * [Error Shortcuts](#error-shortcuts)
@@ -279,19 +278,6 @@ See the example below.
 In the above example the data will validate if the object is not present in the input, even though `user` is required - because the parent object is explicitly *not* required. If the object - on the other hand - *is* present, it must have the `user` key and it must be of type `String`.
 
 > If `required` is not specified, then `Object` and `Array` types are by default `'implicit'`. All other types are by default non-required. Also `required` is ignored if `default` is specified.
-
-#### `allowNull`
-Type: `Boolean`
-
-This validator allows for `null`-values to pass through - even if the input is required.
-
-````javascript
-{ type: String, required: true, allowNull: true }
-````
-
-In the above example input must be of type `String`, it is required, but a value of `null` is allowed.
-
-> By default `allowNull` is set to `false`.
 
 #### `equal`
 Type: Any
