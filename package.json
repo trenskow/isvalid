@@ -19,11 +19,11 @@
     "merge": "^2.1.1"
   },
   "devDependencies": {
-    "@trenskow/caseit": "^1.3.4",
+    "@trenskow/caseit": "^1.3.5",
     "body-parser": "^1.20.2",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^8.35.0",
+    "eslint": "^8.44.0",
     "express": "^4.18.2",
     "mocha": "^10.2.0",
     "supertest": "^6.3.3"
