@@ -616,24 +616,24 @@ describe('validate', function() {
 				});
 			});
 		});
-		describe('autowrap', function() {
-			it('should come back with non-array wrapped in array', () => {
+		describe('autoWrap', function() {
+			it('should come back with non-array wrapped in array.', () => {
 				return expect(isvalid({
 					test: true
 				}, {
 					type: Array,
-					autowrap: true,
+					autoWrap: true,
 					schema: {
 						test: Boolean
 					}
 				})).to.eventually.be.an('array').and.to.have.property(0).and.to.have.property('test', true);
 			});
-			it('should come back with type error if autowrap and not matching sub-schema.', () => {
+			it('should come back with type error if autoWrap and not matching sub-schema.', () => {
 				return expect(isvalid({
 					test: 'Not a boolean'
 				}, {
 					type: Array,
-					autowrap: true,
+					autoWrap: true,
 					schema: {
 						test: Boolean
 					}}))
@@ -641,7 +641,7 @@ describe('validate', function() {
 					.and.to.be.instanceOf(ValidationError)
 					.and.have.property('validator', 'type');
 			});
-			it('should come back with type error if no autowrap and matching sub-schema.', () => {
+			it('should come back with type error if no autoWrap and matching sub-schema.', () => {
 				return expect(isvalid({
 					test: true
 				}, [{
@@ -653,8 +653,8 @@ describe('validate', function() {
 			it('should prioritize concrete over defaults.', () => {
 				return expect(isvalid(true, {
 					type: Array,
-					autowrap: false
-				}, { defaults: { autowrap: true }}))
+					autoWrap: false
+				}, { defaults: { autoWrap: true }}))
 					.to.eventually.be.rejectedWith('Is not of type array.')
 					.and.to.be.instanceOf(ValidationError)
 					.and.have.property('validator', 'type');
