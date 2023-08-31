@@ -33,7 +33,7 @@
       - [`Array` Validators](#array-validators)
         * [`len`](#len)
         * [`unique`](#unique)
-        * [`autowrap`](#autowrap)
+        * [`autoWrap`](#autowrap)
       - [`String` Validators](#string-validators)
         * [`trim`](#trim)
         * [`len`](#len-1)
@@ -100,7 +100,7 @@ try {
 		'user': { type: String, required: true },
 		'pass': { type: String, required: true }
 	});
-	
+
 } catch(err) {
 	// A validation error occurred.
 }
@@ -474,7 +474,7 @@ Example:
 
 > The `unique` validator does a deep comparison on objects and arrays.
 
-##### `autowrap`
+##### `autoWrap`
 Type: `Boolean`
 
 If the provided data is not an array - but it matches the sub-schema - this will wrap the data in an array before actual validation.
@@ -484,12 +484,12 @@ Example:
 ````javascript
 {
 	type: Array,
-	autowrap: true,
+	autoWrap: true,
 	schema: { … }
 }
 ````
 
-If `autowrap` is set to `true` and auto-wrap fails (the sub-schema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error.
+If `autoWrap` is set to `true` and auto-wrap fails (the sub-schema cannot validate the data), then the `type` validator will emit a `'Must be of type Array.'` error.
 
 > Default is `false`.
 
