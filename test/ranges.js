@@ -47,4 +47,10 @@ describe('ranges', function() {
 	it ('should allow for decimal values.', function() {
 		expect(r('(-2.2)-2.2', 0.1)).to.equal(true);
 	});
+	it ('should allow for already formalized ranges.', function() {
+		expect(r([{
+			lower: 0,
+			upper: 2
+		}], 1)).to.equal(true);
+	});
 });
