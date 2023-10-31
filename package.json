@@ -1,6 +1,6 @@
 {
   "name": "isvalid",
-  "version": "4.0.15",
+  "version": "4.0.16",
   "description": "Async JSON validation library for node.js.",
   "main": "./index.js",
   "type": "module",
