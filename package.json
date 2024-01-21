@@ -40,5 +40,8 @@
     "name": "Kristian Trenskow",
     "email": "trenskow@me.com",
     "url": "https://github.com/trenskow"
-  }
+  },
+	"overrides": {
+		"chai": "^5.0.0"
+	}
 }
