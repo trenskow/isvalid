@@ -1,6 +1,6 @@
 {
   "name": "isvalid",
-  "version": "4.0.19",
+  "version": "4.0.20",
   "description": "Async JSON validation library for node.js.",
   "main": "./index.js",
   "type": "module",
@@ -41,7 +41,7 @@
     "email": "trenskow@me.com",
     "url": "https://github.com/trenskow"
   },
-	"overrides": {
-		"chai": "^5.0.0"
-	}
+  "overrides": {
+    "chai": "^5.0.0"
+  }
 }
