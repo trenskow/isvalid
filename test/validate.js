@@ -309,7 +309,7 @@ const commonTests = {
 			});
 		});
 	},
-	all: function(type, validData, invalidData) { var self = this;
+	all: function(type, validData, invalidData) { let self = this;
 		['type', 'required', 'null', 'default', 'equal', 'post'].forEach(function(test) {
 			self[test](type, validData, invalidData);
 		});

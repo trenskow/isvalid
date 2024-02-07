@@ -42,7 +42,10 @@ describe('schema', function() {
 		it('should come back with enum intact', () => {
 			expect(formalize({ type: String, enum: ['this', 'test']}))
 				.to.have.property('enum')
-				.to.have.property(1, 'test');
+				.to.eql({
+					'this': 'this',
+					'test': 'test'
+				});
 		});
 		it('should come back with enum intact (custom error message)', () => {
 			expect(formalize({ type: String, enum: [['this', 'test'], 'Must be this or test.'] }))

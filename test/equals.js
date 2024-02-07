@@ -44,14 +44,14 @@ describe('equals', function() {
 	it('should return false if dates are not equal.', () => {
 		return expect(equals(d1, d2)).to.eventually.be.false;
 	});
-	it ('should return true if objects are equal.', () => {
+	it('should return true if objects are equal.', () => {
 		return expect(equals({
 			awesome: true
 		}, {
 			awesome: true
 		})).to.eventually.be.true;
 	});
-	it ('should return false if object are not equal.', () => {
+	it('should return false if object are not equal.', () => {
 		return expect(equals({
 			awesome: true
 		}, {
@@ -64,14 +64,14 @@ describe('equals', function() {
 	it('should return false if arrays are not equal.', () => {
 		return expect(equals(['This','is','an','array'], ['This','is','another','array'])).to.eventually.be.false;
 	});
-	it ('should return true if objects with arrays are equal.', () => {
+	it('should return true if objects with arrays are equal.', () => {
 		return expect(equals({
 			obj: ['This','is','an','array']
 		}, {
 			obj: ['This','is','an','array']
 		})).to.eventually.be.true;
 	});
-	it ('should return false if objects with arrays are not equal.', () => {
+	it('should return false if objects with arrays are not equal.', () => {
 		return expect(equals({
 			obj: ['This','is','an','array']
 		}, {

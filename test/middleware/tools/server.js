@@ -12,7 +12,7 @@ import bodyParser from 'body-parser';
 
 // We build a simple express test in order to test the middleware
 //
-var app = express();
+const app = express();
 
 app.use(bodyParser.json());
 
