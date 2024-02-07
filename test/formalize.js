@@ -52,6 +52,14 @@ describe('schema', function() {
 				.to.have.property('errors')
 				.to.have.property('enum', 'Must be this or test.');
 		});
+		it('should come back with enum allowed if it is an object.', () => {
+			expect(formalize({ type: String, enum: { this: 'this is', test: 'a test' } }))
+				.to.have.property('enum')
+				.to.eql({
+					'this': 'this is',
+					'test': 'a test'
+				});
+		});
 		it('should throw an error if schema type cannot be determined.', () => {
 			expect(f({ type: '' })).to.throw(SchemaError);
 		});
