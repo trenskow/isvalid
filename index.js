@@ -9,4 +9,4 @@
 import validate, { formalize, keyPaths, merge, plugins } from './lib/index.js';
 
 export default validate;
-export { formalize, keyPaths, merge, plugins };
+export { validate, formalize, keyPaths, merge, plugins };

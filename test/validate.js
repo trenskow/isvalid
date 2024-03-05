@@ -8,6 +8,7 @@
 
 import { expect, assert } from 'chai';
 import ValidationError from '../lib/errors/validation.js';
+import AggregatedError from '../lib/errors/aggregated.js';
 import isvalid from '../index.js';
 import { typeName, instanceTypeName, isSameType } from '../lib/utils.js';
 
@@ -476,17 +477,23 @@ describe('validate', function() {
 				})).to.eventually.not.have.property('why');
 			});
 			describe('required', function() {
-				it ('should come back with object key path when implicit.', () => {
+				it ('should come back with object key path when implicit (aggregated error).', () => {
 					return expect(isvalid(undefined, {
 						'myObject': {
-							'myKey': {
+							'myFirstKey': {
+								type: String,
+								required: true
+							},
+							'mySecondKey': {
 								type: String,
 								required: true
 							}
-						}}))
-						.to.eventually.be.rejectedWith('Data is required.')
-						.and.to.be.instanceOf(ValidationError)
-						.and.have.property('keyPath').to.have.members(['myObject', 'myKey']);
+						}}, { keyPath: ['root'], stopOnFirstError: false }))
+						.to.eventually.be.rejectedWith('Multiple errors occurred.')
+						.and.to.be.instanceOf(AggregatedError)
+						.and.have.property('errors')
+						.and.have.property(0)
+						.and.have.property('message', 'Data is required.');
 				});
 			});
 			describe('#errors', function() {
@@ -541,7 +548,7 @@ describe('validate', function() {
 					}}, { keyPath: 'root'}))
 					.to.eventually.be.rejectedWith('Is not of type string.')
 					.and.to.be.instanceOf(ValidationError)
-					.and.have.property('keyPath').eql(['root', 0]);
+					.and.have.property('keyPath').eql(['root', '0']);
 			});
 		});
 		describe('len', function() {
