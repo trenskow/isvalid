@@ -488,7 +488,7 @@ describe('validate', function() {
 								type: String,
 								required: true
 							}
-						}}, { keyPath: ['root'], stopOnFirstError: false }))
+						}}, { keyPath: ['root'], aggregatedErrors: true }))
 						.to.eventually.be.rejectedWith('Multiple errors occurred.')
 						.and.to.be.instanceOf(AggregatedError)
 						.and.have.property('errors')
