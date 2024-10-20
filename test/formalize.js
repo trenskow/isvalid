@@ -207,5 +207,8 @@ describe('schema', function() {
 				.to.throw(SchemaError)
 				.with.property('message', 'Only case types: `camel`, `domain`, `http`, `kebab`, `pascal`, `snake`, `title` are supported.');
 		});
+		it ('should throw error if string match is not a regular expression', () => {
+			expect(f({ type: String, match: 'test' })).to.throw(SchemaError);
+		});
 	});
 });
