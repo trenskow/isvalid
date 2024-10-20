@@ -42,6 +42,6 @@
 		"url": "https://github.com/trenskow"
 	},
 	"dependencies": {
-		"@trenskow/merge": "^0.1.28"
+		"@trenskow/merge": "^0.1.29"
 	}
 }
