@@ -18,7 +18,7 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.2.0",
 		"@eslint/js": "^9.13.0",
-		"@trenskow/caseit": "^1.4.4",
+		"@trenskow/caseit": "^1.4.5",
 		"body-parser": "^1.20.2",
 		"chai": "^5.1.2",
 		"chai-as-promised": "^8.0.1",
@@ -42,6 +42,6 @@
 		"url": "https://github.com/trenskow"
 	},
 	"dependencies": {
-		"@trenskow/merge": "^0.1.30"
+		"@trenskow/merge": "^0.1.32"
 	}
 }
