@@ -13,7 +13,7 @@ import { use } from '../lib/plugins.js';
 
 chaiUse(chaiAsPromised);
 
-use(function (utils) {
+use('utils', (utils) => {
 	return {
 		supportsType: (type) => utils.isSameType(type, String),
 		validatorsForType: () => { return { ensureCase: String }; },
