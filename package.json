@@ -18,14 +18,14 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.2.0",
 		"@eslint/js": "^9.13.0",
-		"@trenskow/caseit": "^1.4.7",
+		"@trenskow/caseit": "^1.4.8",
 		"body-parser": "^1.20.2",
 		"chai": "^5.1.2",
 		"chai-as-promised": "^8.0.1",
-		"eslint": "^9.18.0",
+		"eslint": "^9.19.0",
 		"express": "^4.21.2",
 		"globals": "^15.14.0",
-		"mocha": "^11.0.1",
+		"mocha": "^11.1.0",
 		"supertest": "^7.0.0"
 	},
 	"scripts": {
@@ -42,6 +42,6 @@
 		"url": "https://github.com/trenskow"
 	},
 	"dependencies": {
-		"@trenskow/merge": "^0.1.35"
+		"@trenskow/merge": "^0.1.36"
 	}
 }
