@@ -16,15 +16,15 @@
 		"connect"
 	],
 	"devDependencies": {
-		"@eslint/eslintrc": "^3.2.0",
+		"@eslint/eslintrc": "^3.3.0",
 		"@eslint/js": "^9.13.0",
-		"@trenskow/caseit": "^1.4.8",
+		"@trenskow/caseit": "^1.4.9",
 		"body-parser": "^1.20.2",
-		"chai": "^5.1.2",
+		"chai": "^5.2.0",
 		"chai-as-promised": "^8.0.1",
-		"eslint": "^9.19.0",
+		"eslint": "^9.21.0",
 		"express": "^4.21.2",
-		"globals": "^15.14.0",
+		"globals": "^15.15.0",
 		"mocha": "^11.1.0",
 		"supertest": "^7.0.0"
 	},
@@ -42,6 +42,6 @@
 		"url": "https://github.com/trenskow"
 	},
 	"dependencies": {
-		"@trenskow/merge": "^0.1.36"
+		"@trenskow/merge": "^0.1.37"
 	}
 }
