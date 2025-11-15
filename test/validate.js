@@ -380,6 +380,11 @@ describe('validate', function() {
 				.and.to.have.property('validator', 'type');
 		});
 	});
+	describe('any validator', function() {
+		it('should come back with same input as output.', () => {
+			return expect(isvalid({ some: 'data' }, 'any')).to.eventually.eql({ some: 'data' });
+		});
+	});
 	describe('object validator', function() {
 		commonTests.all(Object, {}, 123);
 		it('should come back with same input if sub-schema is not provided.', () => {
