@@ -16,10 +16,10 @@
 		"connect"
 	],
 	"devDependencies": {
-		"@eslint/eslintrc": "^3.3.1",
+		"@eslint/eslintrc": "^3.3.3",
 		"@eslint/js": "^9.13.0",
 		"@trenskow/caseit": "^1.4.16",
-		"body-parser": "^2.2.0",
+		"body-parser": "^2.2.1",
 		"chai": "^6.2.1",
 		"chai-as-promised": "^8.0.2",
 		"eslint": "^9.39.1",
