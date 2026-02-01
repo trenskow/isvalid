@@ -18,15 +18,15 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.3",
 		"@eslint/js": "^9.13.0",
-		"@trenskow/caseit": "^1.4.19",
-		"body-parser": "^2.2.1",
+		"@trenskow/caseit": "^1.4.20",
+		"body-parser": "^2.2.2",
 		"chai": "^6.2.2",
 		"chai-as-promised": "^8.0.2",
 		"eslint": "^9.39.2",
 		"express": "^5.2.1",
-		"globals": "^17.0.0",
+		"globals": "^17.3.0",
 		"mocha": "^11.7.5",
-		"supertest": "^7.1.4"
+		"supertest": "^7.2.2"
 	},
 	"scripts": {
 		"test": "./node_modules/mocha/bin/mocha.js ./test/index.js"
@@ -42,6 +42,6 @@
 		"url": "https://github.com/trenskow"
 	},
 	"dependencies": {
-		"@trenskow/merge": "^0.1.50"
+		"@trenskow/merge": "^0.1.51"
 	}
 }
