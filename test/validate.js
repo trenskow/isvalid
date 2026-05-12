@@ -167,8 +167,8 @@ const commonTests = {
 			});
 		});
 	},
-	post: function() {
-		describe('post', function() {
+	custom: function() {
+		describe('custom', function() {
 			it('should call function if post is specified.', () => {
 				return expect(isvalid('test', {
 					post: function(data) {
@@ -232,6 +232,46 @@ const commonTests = {
 					},
 					pre: function(obj) {
 						expect(obj.high).to.be.undefined;
+					}
+				});
+				return Promise.all([
+					expect(s).to.eventually.have.property('low').equal(0),
+					expect(s).to.eventually.have.property('high').equal(10)
+				]);
+			});
+			it('should first validate using pre and default pre and then validations,', () => {
+				let s = isvalid({
+					'low': 0
+				}, {
+					type: Object,
+					schema: {
+						low: { type: Number },
+						high: { type: Number, default: 10 }
+					},
+					pre: function(data, schema) {
+
+						expect(data.high).to.equal(5);
+
+						return {
+							low: data.low,
+							high: schema.schema.high.default
+						};
+
+					}
+				}, {
+					defaults: {
+						pre: function(data, schema) {
+
+							if (schema.type !== Object) return data;
+
+							expect(data.high).to.be.undefined;
+
+							return {
+								low: data.low,
+								high: 5
+							};
+
+						}
 					}
 				});
 				return Promise.all([
@@ -311,7 +351,7 @@ const commonTests = {
 		});
 	},
 	all: function(type, validData, invalidData) { let self = this;
-		['type', 'required', 'null', 'default', 'equal', 'post'].forEach(function(test) {
+		['type', 'required', 'null', 'default', 'equal', 'custom'].forEach(function(test) {
 			self[test](type, validData, invalidData);
 		});
 	}
