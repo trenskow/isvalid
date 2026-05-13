@@ -2,6 +2,10 @@
 
 NOTICE: If your version number is not explicitly specified, it contains bug fixes or changes to internal workings.
 
+## Version 5.0.0
+
+* Formatting of `range` and `len` validators has changed (see more in [README](README.md#breaking-changes-from-version-4-to-5))
+
 ## Version 4.0.0
 
 * Converted to use ES modules.

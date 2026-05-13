@@ -595,16 +595,16 @@ describe('validate', function() {
 			it('should come back with same input as output if within ranges of len.', () => {
 				return expect(isvalid([1,2], {
 					type: Array,
-					len: '2-',
+					len: '2...',
 					schema: Number
 				})).to.eventually.be.an('Array').of.length(2);
 			});
 			it('should come back with error if array length is not within ranges of len.', () => {
 				return expect(isvalid([], {
 					type: Array,
-					len: '2-',
+					len: '2...',
 					schema: {}}))
-					.to.eventually.be.rejectedWith('Array length is not within range of \'2-\'.')
+					.to.eventually.be.rejectedWith('Array length is not within range of \'2...\'.')
 					.and.to.be.instanceOf(ValidationError)
 					.and.have.property('validator', 'len');
 			});
@@ -612,7 +612,7 @@ describe('validate', function() {
 				it('should come back with error of post message if array length is not within ranges of len.', () => {
 					return expect(isvalid([], {
 						type: Array,
-						len: '2-',
+						len: '2...',
 						schema: {},
 						errors: {
 							len: 'Not within range.'
@@ -785,22 +785,22 @@ describe('validate', function() {
 		});
 		describe('length', function() {
 			it('should come back with an error if string is not with range.', () => {
-				return expect(isvalid('123', { type: 'string', len: '-2'}))
-					.to.eventually.be.rejectedWith('String length is not within range of -2')
+				return expect(isvalid('123', { type: 'string', len: '...2'}))
+					.to.eventually.be.rejectedWith('String length is not within range of ...2')
 					.and.to.be.instanceOf(ValidationError)
 					.and.have.property('validator', 'len');
 			});
 			it('should come back with no error if string is within range.', () => {
 				return expect(isvalid('123', {
 					type: 'string',
-					len: '2-'
+					len: '2...'
 				}));
 			});
 			describe('#errors', function() {
 				it ('should come back with a custom error message', () => {
 					return expect(isvalid('123', {
 						type: 'string',
-						len: ['-2', 'My custom error']}))
+						len: ['...2', 'My custom error']}))
 						.to.eventually.be.rejectedWith('My custom error')
 						.and.to.be.instanceOf(ValidationError)
 						.and.have.property('validator', 'len');
@@ -816,20 +816,24 @@ describe('validate', function() {
 		});
 		describe('range', function() {
 			it('should come back with error if input is not within range.', () => {
-				return expect(isvalid(1, { type: Number, range: '2-4' }))
+				return expect(isvalid(1, { type: Number, range: '2...4' }))
 					.to.eventually.be.rejectedWith('Not within')
 					.and.to.be.instanceOf(ValidationError)
 					.and.to.have.property('validator', 'range');
 			});
 			it('should come back with no error and output same as input if within range.', () => {
-				return expect(isvalid(3, { type: Number, range: '2-4' }))
+				return expect(isvalid(3, { type: Number, range: '2...4' }))
+					.to.eventually.equal(3);
+			});
+			it ('should come back with no error and output same as input if range is supplied as default', () => {
+				return expect(isvalid(3, { type: Number }, { defaults: { range: '2...4' }}))
 					.to.eventually.equal(3);
 			});
 			describe('#errors', function() {
 				it('should come back with error of post message if input is not within range.', () => {
 					return expect(isvalid(1, {
 						type: Number,
-						range: '2-4',
+						range: '2...4',
 						errors: {
 							range: 'Must be between 2 and 4.'
 						}}))

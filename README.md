@@ -1,61 +1,67 @@
 # isvalid
 
-[![npm version](https://badge.fury.io/js/isvalid.svg)](https://www.npmjs.com/package/isvalid) [![travis ci](https://travis-ci.org/trenskow/isvalid.svg?branch=master)](https://travis-ci.org/trenskow/isvalid)
--
+[![npm version](https://badge.fury.io/js/isvalid.svg)](https://www.npmjs.com/package/isvalid)
 
 **isvalid** is an asynchronous node.js library for validating and error correcting JavaScript data - which also includes JSON. It uses a very simple schema model - inspired by [Mongoose](https://npmjs.org/package/mongoose).
 
 # Table of Content
 
 - [How to Use](#how-to-use)
+  
   * [Example](#example)
+- [History](#History)
+
+  - [Breaking Changes From Version 4 to 5](#breaking-changes-from-version-4-to-5)
+
 - [How it Works](#how-it-works)
+
   * [A Note on the Examples in this Document](#a-note-on-the-examples-in-this-document)
   * [Errors](#errors)
-    + [SchemaError](#schemaerror)
-    + [ValidationError](#validationerror)
+  + [SchemaError](#schemaerror)
+  + [ValidationError](#validationerror)
   * [Supported Types](#supported-types)
-    + [Validators Available to All Types](#validators-available-to-all-types)
-      - [`default`](#default)
-        * [Static Values](#static-values)
-        * [Asynchronous Functions](#asynchronous-functions)
-        * [Synchronous Functions](#synchronous-functions)
-      - [`required`](#required)
-        * [Implicitly Required](#implicitly-required)
-      - [`equal`](#equal)
-      - [`errors` (Custom Error Messages)](#errors-custom-error-messages)
-        * [Error Shortcuts](#error-shortcuts)
-    + [Type Specific Validators](#type-specific-validators)
-      - [Validators Common to `Object` and `Array`](#validators-common-to-object-and-array)
-        * [`schema`](#schema)
-      - [`Object` Validators](#object-validators)
-        * [`unknownKeys`](#unknownkeys)
-      - [`Array` Validators](#array-validators)
-        * [`len`](#len)
-        * [`unique`](#unique)
-        * [`autoWrap`](#autowrap)
-      - [`String` Validators](#string-validators)
-        * [`trim`](#trim)
-        * [`len`](#len-1)
-        * [`match`](#match)
-        * [`enum`](#enum)
-      - [`Number` Validators](#number-validators)
-        * [`range`](#range)
-        * [`float`](#float)
-      - [Custom Types](#custom-types)
+  + [Validators Available to All Types](#validators-available-to-all-types)
+    
+  	- [`default`](#default)
+  	* [Static Values](#static-values)
+  	* [Asynchronous Functions](#asynchronous-functions)
+    * [Synchronous Functions](#synchronous-functions)
+  	- [`required`](#required)
+    * [Implicitly Required](#implicitly-required)
+    - [`equal`](#equal)
+  	- [`errors` (Custom Error Messages)](#errors-custom-error-messages)
+  	* [Error Shortcuts](#error-shortcuts)
+  + [Type Specific Validators](#type-specific-validators)
+    - [Validators Common to `Object` and `Array`](#validators-common-to-object-and-array)
+  	* [`schema`](#schema)
+    - [`Object` Validators](#object-validators)
+  	* [`unknownKeys`](#unknownkeys)
+    - [`Array` Validators](#array-validators)
+  	* [`len`](#len)
+  	* [`unique`](#unique)
+  	* [`autoWrap`](#autowrap)
+    - [`String` Validators](#string-validators)
+  	* [`trim`](#trim)
+  	* [`len`](#len-1)
+  	* [`match`](#match)
+  	* [`enum`](#enum)
+    - [`Number` Validators](#number-validators)
+  	* [`range`](#range)
+  	* [`float`](#float)
+    - [Custom Types](#custom-types)
   * [`post`](#post)
-    + [Example](#example-1)
-    + [Options with Post Validators](#options-with-post-validators)
-    + [Multiple Post Validators](#multiple-post-validators)
+  + [Example](#example-1)
+  + [Options with Post Validators](#options-with-post-validators)
+  + [Multiple Post Validators](#multiple-post-validators)
   * [`pre`](#pre)
   * [Type Shortcuts](#type-shortcuts)
-    + [Object Shortcuts](#object-shortcuts)
-    + [Array Shortcuts](#array-shortcuts)
-    + [Other Shortcuts](#other-shortcuts)
+  + [Object Shortcuts](#object-shortcuts)
+  + [Array Shortcuts](#array-shortcuts)
+  + [Other Shortcuts](#other-shortcuts)
   * [Automatic Type Conversion](#automatic-type-conversion)
-    + [Numbers](#numbers)
-    + [Booleans](#booleans)
-    + [Dates](#dates)
+  + [Numbers](#numbers)
+  + [Booleans](#booleans)
+  + [Dates](#dates)
 - [As Connect or Express Middleware](#as-connect-or-express-middleware)
   * [Example](#example-2)
 - [Contributing](#contributing)
@@ -110,6 +116,18 @@ try {
 ````
 
 > There is also build-in support for usage as an [express](https://npmjs.org/package/express) or [connect](https://npmjs.org/package/connect) middleware – see the [As Connect or Express Middleware](#as-connect-or-express-middleware) section below for more information.
+
+# History
+
+For detailed history – see [HISTORY](HISTORY.md).
+
+## Breaking Changes From Version 4 to 5
+
+As of version 5 the formatting of the [`range`](#range) and [`len`](#len-1) has changed from using `-` as a separator to using `...`.
+
+The change is done in order to simplify the parsing and make it more obvious when reading what is a `-` negative sign and `-` as deliminator. 
+
+The change is not backwards compatible - so implentations using the version 4 formatting must be updated to use the new formatting.
 
 # How it Works
 
@@ -400,7 +418,7 @@ Examples:
 ````javascript
 {
 	type: Array,
-	len: '2-',
+	len: '2...',
 	schema: { … }
 }
 ````
@@ -410,7 +428,7 @@ Examples:
 ````javascript
 {
 	type: Array,
-	len: '-2',
+	len: '...2',
 	schema: { … }
 }
 ````
@@ -420,7 +438,7 @@ Examples:
 ````javascript
 {
 	type: Array,
-	len: '2-5',
+	len: '2...5',
 	schema: { … }
 }
 ````
@@ -430,7 +448,7 @@ Examples:
 ````javascript
 {
 	type: Array,
-	len: '-2,5,8-',
+	len: '...2,5,8...',
 	schema: { … }
 }
 ````
@@ -440,7 +458,7 @@ Examples:
 ````javascript
 {
 	type: Array,
-	len: '(-2)-2',
+	len: '-2...2',
 	schema: { … }
 }
 ````
@@ -450,7 +468,7 @@ Examples:
 ````javascript
 {
 	type: Array,
-	len: '(-2.2)-2.2',
+	len: '-2.2...2.2',
 	schema: { … }
 }
 ````

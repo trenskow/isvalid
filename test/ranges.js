@@ -36,16 +36,16 @@ describe('ranges', function() {
 		});
 	});
 	it ('should return true if index is within range.', function() {
-		expect(r('-2,4-6,8,10-', 2)).to.equal(true);
+		expect(r('...2,4...6,8,10...', 2)).to.equal(true);
 	});
 	it ('should return false if index is not within range.', function() {
-		expect(r('-2,4-6,8,10-', 3)).to.equal(false);
+		expect(r('...2,4...6,8,10...', 3)).to.equal(false);
 	});
 	it ('should allow negative values wrapped in parentheses.', function() {
-		expect(r('(-2)-', -1)).to.equal(true);
+		expect(r('(-2)...', -1)).to.equal(true);
 	});
 	it ('should allow for decimal values.', function() {
-		expect(r('(-2.2)-2.2', 0.1)).to.equal(true);
+		expect(r('(-2.2)...2.2', 0.1)).to.equal(true);
 	});
 	it ('should allow for already formalized ranges.', function() {
 		expect(r([{

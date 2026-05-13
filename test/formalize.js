@@ -191,13 +191,13 @@ describe('schema', function() {
 			})).to.have.property('priority').equal(10);
 		});
 		it ('should throw error if number range is not valid.', () => {
-			expect(f({ type: Number, range: 'abc-abc' })).to.throw(SchemaError);
+			expect(f({ type: Number, range: 'abc...abc' })).to.throw(SchemaError);
 		});
 		it ('should throw error if string len is negative.', () => {
-			expect(f({ type: String, len: '-2-' })).to.throw(SchemaError);
+			expect(f({ type: String, len: '-2...' })).to.throw(SchemaError);
 		});
 		it ('should throw error if array len is negative.', () => {
-			expect(f({ type: Array, len: '-2-' })).to.throw(SchemaError);
+			expect(f({ type: Array, len: '-2...' })).to.throw(SchemaError);
 		});
 		it ('should throw error if validator is not supported', () => {
 			expect(f({ type: String, nonExistingValidator: 'myValue' })).to.throw(SchemaError);
