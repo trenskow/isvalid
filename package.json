@@ -18,11 +18,11 @@
 	"devDependencies": {
 		"@eslint/eslintrc": "^3.3.5",
 		"@eslint/js": "^10.0.1",
-		"@trenskow/caseit": "^1.4.24",
+		"@trenskow/caseit": "^1.4.25",
 		"body-parser": "^2.2.2",
 		"chai": "^6.2.2",
 		"chai-as-promised": "^8.0.2",
-		"eslint": "^10.4.0",
+		"eslint": "^10.4.1",
 		"express": "^5.2.1",
 		"globals": "^17.6.0",
 		"mocha": "^11.7.6",
