@@ -16,13 +16,13 @@
 		"connect"
 	],
 	"devDependencies": {
-		"@eslint/eslintrc": "^3.3.5",
+		"@eslint/eslintrc": "^3.3.6",
 		"@eslint/js": "^10.0.1",
-		"@trenskow/caseit": "^1.4.27",
+		"@trenskow/caseit": "^1.4.28",
 		"body-parser": "^2.3.0",
 		"chai": "^6.2.2",
 		"chai-as-promised": "^8.0.2",
-		"eslint": "^10.6.0",
+		"eslint": "^10.7.0",
 		"express": "^5.2.1",
 		"globals": "^17.7.0",
 		"mocha": "^11.7.6",
