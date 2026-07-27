@@ -22,9 +22,9 @@
 		"body-parser": "^2.3.0",
 		"chai": "^6.2.2",
 		"chai-as-promised": "^8.0.2",
-		"eslint": "^10.7.0",
+		"eslint": "^10.8.0",
 		"express": "^5.2.1",
-		"globals": "^17.7.0",
+		"globals": "^17.8.0",
 		"mocha": "^11.7.6",
 		"supertest": "^7.2.2"
 	},
